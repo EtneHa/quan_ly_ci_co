@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quan_ly_ci_co/presentation/navigation/app_navigation.dart';
-import 'package:quan_ly_ci_co/presentation/screen/dashboard/dashboard_screen.dart';
 import 'package:quan_ly_ci_co/presentation/screen/dashboard/logger/logger_screen.dart';
 import 'package:quan_ly_ci_co/presentation/screen/dashboard/navigation_screen.dart';
-import 'package:quan_ly_ci_co/presentation/screen/dashboard/setting/setting_screen.dart';
+import 'package:quan_ly_ci_co/presentation/screen/dashboard/bangcong/bangcong_screen.dart';
 import 'package:quan_ly_ci_co/presentation/screen/dashboard/user/user_screen.dart';
 import 'package:quan_ly_ci_co/presentation/screen/launching/page_not_found_screen.dart';
 import 'package:quan_ly_ci_co/presentation/screen/launching/splash_screen.dart';
@@ -17,38 +16,30 @@ final GoRouter appGoRouter = GoRouter(
   restorationScopeId: 'app',
   routerNeglect: false,
   initialLocation: '/',
-  redirect: (BuildContext context, GoRouterState state) {
-    // Skip redirect if we're not at the root path
-    if (state.uri.path != '/') {
-      return null;
-    }
-    return null;
-  },
   onException: (context, state, router) {
-    router.goNamed('/page-not-found', extra: state.uri.toString());
+    router.goNamed('page-not-found', extra: state.uri.toString());
   },
   routes: [
     GoRoute(
-        path: '/',
-        builder: (context, state) => const SplashScreen(),
-        routes: [
-          _dashboardRoute,
-          GoRoute(
-            name: 'sign-in',
-            path: '/sign-in',
-            builder: (BuildContext context, GoRouterState state) {
-              return BlocProvider(
-                create: (context) => SignInCubit(),
-                child: const SignInScreen(),
-              );
-            },
-          ),
-        ]),
+      path: '/',
+      builder: (context, state) => const SplashScreen(),
+    ),
+    _dashboardRoute,
+    GoRoute(
+      name: 'sign-in',
+      path: '/sign-in',
+      builder: (BuildContext context, GoRouterState state) {
+        return BlocProvider(
+          create: (context) => SignInCubit(),
+          child: const SignInScreen(),
+        );
+      },
+    ),
     GoRoute(
       name: 'page-not-found',
       path: '/page-not-found',
       builder: (BuildContext context, GoRouterState state) {
-        return const PageNotFoundScreen();
+        return PageNotFoundScreen(url: state.extra as String? ?? '');
       },
     ),
   ],
@@ -65,10 +56,8 @@ final _dashboardRoute = StatefulShellRoute.indexedStack(
       routes: [
         GoRoute(
           name: 'dashboard',
-          path: 'dashboard',
-          builder: (context, state) {
-            return DashboardScreen(child: SizedBox());
-          },
+          path: '/dashboard',
+          redirect: (_, __) => '/dashboard/user',
         ),
       ],
     ),
@@ -77,7 +66,7 @@ final _dashboardRoute = StatefulShellRoute.indexedStack(
       routes: [
         GoRoute(
           name: 'user',
-          path: 'user',
+          path: '/dashboard/user',
           builder: (context, state) {
             return UserScreen();
           },
@@ -89,7 +78,7 @@ final _dashboardRoute = StatefulShellRoute.indexedStack(
       routes: [
         GoRoute(
           name: 'logger',
-          path: 'logger',
+          path: '/dashboard/logger',
           builder: (context, state) {
             return LoggerScreen();
           },
@@ -100,10 +89,10 @@ final _dashboardRoute = StatefulShellRoute.indexedStack(
       navigatorKey: GlobalKey<NavigatorState>(),
       routes: [
         GoRoute(
-          name: 'setting',
-          path: 'setting',
+          name: 'bangcong',
+          path: '/bangcong',
           builder: (context, state) {
-            return SettingScreen();
+            return BangCongScreen();
           },
         ),
       ],

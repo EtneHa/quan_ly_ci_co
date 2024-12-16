@@ -3,25 +3,28 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quan_ly_ci_co/core/apps/enums/base_screen_state.dart';
 import 'package:quan_ly_ci_co/core/styles/box_shadow_app.dart';
 import 'package:quan_ly_ci_co/core/styles/text_styles_app.dart';
-import 'package:quan_ly_ci_co/presentation/screen/dashboard/user/cubit/user_cubit.dart';
-import 'package:quan_ly_ci_co/presentation/screen/dashboard/user/cubit/user_state.dart';
-import 'package:quan_ly_ci_co/presentation/screen/dashboard/user/user_data_grid.dart';
+import 'package:quan_ly_ci_co/presentation/screen/dashboard/bangcong/bangcong_data_grid.dart';
 import 'package:quan_ly_ci_co/presentation/screen/dashboard/user/widgets/create_user_form.dart';
 import 'package:quan_ly_ci_co/presentation/widgets/button/filled_button_app.dart';
 import 'package:quan_ly_ci_co/presentation/widgets/button/outlined_button_app.dart';
 import 'package:quan_ly_ci_co/presentation/widgets/dialog/dialog.dart';
 import 'package:quan_ly_ci_co/presentation/widgets/input/input_text_field.dart';
+import 'cubit/bangcong_cubit.dart';
+import 'cubit/bangcong_state.dart';
 
-class UserScreen extends StatelessWidget {
-  UserScreen({super.key});
+class BangCongScreen extends StatelessWidget {
+  BangCongScreen({super.key});
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => UserCubit()..loadUsers(1, 10),
+      create: (_) => BangCongCubit()..loadData(),
       child: Scaffold(
-        body: BlocBuilder<UserCubit, UserState>(
+        appBar: AppBar(
+          title: const Text('Bảng Công'),
+        ),
+        body: BlocBuilder<BangCongCubit, BangCongState>(
           builder: (context, state) {
             if (state.screenState == BaseScreenState.loading) {
               return const Center(child: CircularProgressIndicator());
@@ -60,7 +63,7 @@ class UserScreen extends StatelessWidget {
                                   child: InputTextField(
                                     label: 'Tìm kiếm',
                                     onChanged: (value) {
-                                      context.read<UserCubit>().search(value);
+                                      // context.read<UserCubit>().search(value);
                                     },
                                     hint: 'Mã nhân viên, Họ tên,...',
                                   ),
@@ -71,7 +74,7 @@ class UserScreen extends StatelessWidget {
                                   child: InputTextField(
                                     label: 'Tìm kiếm',
                                     onChanged: (value) {
-                                      context.read<UserCubit>().search(value);
+                                      // context.read<UserCubit>().search(value);
                                     },
                                     hint: 'Mã nhân viên, Họ tên,...',
                                   ),
@@ -80,9 +83,7 @@ class UserScreen extends StatelessWidget {
                                 const SizedBox(width: 16),
                                 OutlinedButtonApp(
                                     onPressed: () {},
-                                    child: Text(
-                                        'Xuất danh sách nhân viên'
-                                            .toUpperCase(),
+                                    child: Text('XUẤT BẢNG CÔNG'.toUpperCase(),
                                         style: TextStylesApp.medium(
                                             color: Colors.black))),
                                 const SizedBox(width: 16),
@@ -100,11 +101,7 @@ class UserScreen extends StatelessWidget {
                                           FilledButtonApp(
                                             onPressed: () {
                                               if (formKey.currentState!
-                                                  .validate()) {
-                                                context
-                                                    .read<UserCubit>()
-                                                    .createUser();
-                                              }
+                                                  .validate()) {}
                                             },
                                             child: Text(
                                                 'Thêm nhân viên'.toUpperCase(),
@@ -115,7 +112,7 @@ class UserScreen extends StatelessWidget {
                                         content: Form(
                                             key: formKey,
                                             child: CreateUserForm())),
-                                    child: Text('Thêm nhân viên'.toUpperCase(),
+                                    child: Text('Chỉnh sửa'.toUpperCase(),
                                         style: TextStylesApp.medium(
                                             color: Colors.white)))
                               ],
@@ -123,7 +120,8 @@ class UserScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 24),
                           Expanded(
-                              child: UserDataGrid(data: state.users ?? [])),
+                              child: BangCongDataGrid(
+                                  data: state.chamgCongData ?? [])),
                         ],
                       ),
                     ),

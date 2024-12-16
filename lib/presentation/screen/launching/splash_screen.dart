@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:quan_ly_ci_co/presentation/navigation/app_navigation.dart';
+import 'package:go_router/go_router.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -22,8 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(const Duration(milliseconds: 300), () {});
     if (!mounted) return;
     try {
-      NavigationApp.replaceWith(
-          NavigationApp.navigatorKey.currentContext!, 'dashboard');
+      GoRouter.of(context).pushReplacementNamed('sign-in'); 
     } catch (e) {
       print(e);
     }

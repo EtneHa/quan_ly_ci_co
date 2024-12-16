@@ -1,5 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quan_ly_ci_co/core/apps/enums/base_screen_state.dart';
+import 'package:quan_ly_ci_co/data/remote/request/pagination_params.dart';
+import 'package:quan_ly_ci_co/data/remote/user_repository.dart';
 import 'package:quan_ly_ci_co/domain/models/user_model.dart';
 import 'package:quan_ly_ci_co/presentation/screen/dashboard/user/cubit/user_state.dart';
 
@@ -148,14 +150,24 @@ List<UserModel> listUsers = [
 
 class UserCubit extends Cubit<UserState> {
   UserCubit() : super(const UserState(screenState: BaseScreenState.none));
+  final _repo = UserRepository();
 
-  Future<void> loadUsers() async {
+  Future<void> loadUsers(int page, int limit) async {
     try {
       emit(state.copyWith(screenState: BaseScreenState.loading));
-      await Future.delayed(const Duration(seconds: 2)); // Simulate API call
+      final res =
+          await _repo.getUserList(PaginationParams(page: page, limit: limit));
+      if (res?.success == false) {
+        emit(state.copyWith(
+          screenState: BaseScreenState.error,
+          errorText: res?.message ?? 'Fetch user list failed',
+        ));
+        return;
+      }
+
       emit(state.copyWith(
         screenState: BaseScreenState.success,
-        users: listUsers, // Add your user data here
+        users: (res?.data ?? []).map((user) => user.toUserModel()).toList(),
       ));
     } catch (e) {
       emit(state.copyWith(
@@ -166,4 +178,6 @@ class UserCubit extends Cubit<UserState> {
   }
 
   void search(String value) {}
+
+  void createUser() {}
 }

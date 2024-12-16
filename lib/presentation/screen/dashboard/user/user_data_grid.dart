@@ -57,7 +57,7 @@ class UserDataGrid extends StatelessWidget {
 
   Widget _renderBaseColumnHeader({
     required Widget child,
-    Alignment alignment = Alignment.center,
+    Alignment alignment = Alignment.centerLeft,
   }) {
     return Container(
         alignment: alignment,
@@ -103,21 +103,21 @@ class _DataSource extends DataGridSource {
 
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {
-    // TODO implement row UI
     return DataGridRowAdapter(
         color: rows.indexOf(row) % 2 == 1 ? Colors.amber[50] : Colors.white,
         cells: [
           _buildStringCell(row.getCells()[0].value),
-          _buildStringCell(row.getCells()[0].value),
-          _buildStringCell(row.getCells()[0].value),
-          _buildStringCell(row.getCells()[0].value),
+          _buildStringCell(row.getCells()[1].value),
+          _buildStringCell(row.getCells()[2].value),
+          _buildStringCell(row.getCells()[3].value),
+          _buildStringCell(row.getCells()[4].value),
         ]);
   }
 
   Widget _buildStringCell(String? value) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      alignment: Alignment.center,
+      alignment: Alignment.centerLeft,
       child: Text(
         value ?? '',
         style: TextStylesApp.regular(color: Colors.black),

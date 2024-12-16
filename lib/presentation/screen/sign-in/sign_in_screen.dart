@@ -5,6 +5,7 @@ import 'package:quan_ly_ci_co/core/styles/text_styles_app.dart';
 import 'package:quan_ly_ci_co/core/utils/toast.dart';
 import 'package:quan_ly_ci_co/gen/assets.gen.dart';
 import 'package:quan_ly_ci_co/presentation/navigation/app_navigation.dart';
+import 'package:quan_ly_ci_co/presentation/widgets/button/filled_button_app.dart';
 import 'package:quan_ly_ci_co/presentation/widgets/input/input_text_field.dart';
 import 'package:quan_ly_ci_co/presentation/screen/sign-in/cubit/sign_in_cubit.dart';
 
@@ -114,27 +115,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 ),
                         ),
                         const SizedBox(height: 32),
-                        FilledButton(
-                            onPressed: _signIn,
-                            style: FilledButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              backgroundColor: Colors.blue,
-                              elevation: 3,
-                              shadowColor: Colors.black.withOpacity(0.2),
-                            ),
-                            child: Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8, horizontal: 22),
-                              child: Text(
-                                'Đăng nhập',
-                                textAlign: TextAlign.center,
-                                style: TextStylesApp.subtitle1(
-                                    color: Colors.white),
-                              ),
-                            )),
+                        FilledButtonApp(onPressed: _signIn, label: 'Đăng nhập'),
                       ],
                     ),
                   )

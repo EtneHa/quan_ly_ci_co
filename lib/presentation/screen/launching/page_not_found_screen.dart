@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class PageNotFoundScreen extends StatelessWidget {
-  const PageNotFoundScreen({super.key});
+  const PageNotFoundScreen({super.key, required this.url});
+  final String url;
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +25,9 @@ class PageNotFoundScreen extends StatelessWidget {
               style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-            const Text(
-              'Page Not Found',
-              style: TextStyle(fontSize: 20),
+            Text(
+              'Page Not Found $url',
+              style: const TextStyle(fontSize: 20),
             ),
             const SizedBox(height: 20),
             ElevatedButton(

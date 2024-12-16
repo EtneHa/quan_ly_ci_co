@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quan_ly_ci_co/gen/assets.gen.dart';
 import 'package:quan_ly_ci_co/presentation/navigation/app_navigation.dart';
 
 class NavigationScreen extends StatefulWidget {
@@ -13,7 +14,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
     'dashboard',
     'logger',
     'user',
-    'setting'
+    'bangcong'
   ];
 
   void _onItemTapped(int index) {
@@ -23,57 +24,51 @@ class _NavigationScreenState extends State<NavigationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: widget.child),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            const DrawerHeader(
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+      ),
+      body: Row(
+        children: [
+          Drawer(
+            child: Container(
               decoration: BoxDecoration(
-                color: Colors.blue,
+                  border: Border(right: BorderSide(color: Colors.grey[300]!))),
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: <Widget>[
+                  const SizedBox(height: 24),
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                          padding: const EdgeInsets.only(left: 16),
+                          child: Assets.svg.logo.svg(width: 120, height: 24))),
+                  const SizedBox(height: 24),
+                  ListTile(
+                    leading: Icon(Icons.dashboard),
+                    title: Text('Dashboard'),
+                    onTap: () => _onItemTapped(0),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.list),
+                    title: Text('Logger'),
+                    onTap: () => _onItemTapped(1),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.person),
+                    title: Text('User'),
+                    onTap: () => _onItemTapped(2),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.calendar_month_rounded),
+                    title: Text('Bang Cong'),
+                    onTap: () => _onItemTapped(3),
+                  ),
+                ],
               ),
-              child: Text(
-                'Navigation Menu',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
             ),
-            ListTile(
-              leading: Icon(Icons.dashboard),
-              title: Text('Dashboard'),
-              onTap: () {
-                _onItemTapped(0);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.list),
-              title: Text('Logger'),
-              onTap: () {
-                _onItemTapped(1);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.person),
-              title: Text('User'),
-              onTap: () {
-                _onItemTapped(2);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Setting'),
-              onTap: () {
-                _onItemTapped(3);
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
+          ),
+          Expanded(child: Center(child: widget.child)),
+        ],
       ),
     );
   }
