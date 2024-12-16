@@ -18,8 +18,10 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController =
+      TextEditingController(text: 'admin@example.com');
+  final TextEditingController _passwordController =
+      TextEditingController(text: 'adminpassword123');
   bool obscureText = true;
 
   void _signIn() {
@@ -88,15 +90,17 @@ class _SignInScreenState extends State<SignInScreen> {
                     width: 450,
                     child: Column(
                       children: [
-                        const InputTextField(
+                        InputTextField(
                           label: 'Mã nhân viên',
                           hint: 'Mã nhân viên',
+                          controller: _emailController,
                           validator: StringValidate.validateRequired,
                         ),
                         const SizedBox(height: 16),
                         InputTextField(
                           label: 'Mật khẩu',
                           hint: 'Mật khẩu',
+                          controller: _passwordController,
                           keyboardType: TextInputType.visiblePassword,
                           obscureText: obscureText,
                           validator: StringValidate.validatePassword,

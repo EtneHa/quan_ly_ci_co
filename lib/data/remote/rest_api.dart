@@ -31,6 +31,7 @@ class RestApi {
   Future<Response> get(String path,
       {Map<String, dynamic>? queryParameters}) async {
     try {
+      _dio.options.headers.remove('User-Agent');
       return await _dio.get(path, queryParameters: queryParameters);
     } catch (e) {
       rethrow;
