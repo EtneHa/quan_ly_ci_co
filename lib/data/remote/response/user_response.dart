@@ -17,7 +17,8 @@ class ListUserResponse extends BaseResponse {
 }
 
 class CreateUserResponse extends BaseResponse {
-  CreateUserResponse({required super.success, required super.message, required this.data});
+  CreateUserResponse(
+      {required super.success, required super.message, required this.data});
   final String? data;
   factory CreateUserResponse.fromJson(Map<String, dynamic> json) {
     return CreateUserResponse(

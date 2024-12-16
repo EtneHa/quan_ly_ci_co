@@ -46,7 +46,12 @@ class ToastApp {
           children: [
             icon,
             const SizedBox(width: 12.0),
-            Text(message, style: const TextStyle(color: Colors.white)),
+            Expanded(
+                child: Text(
+              message,
+              style: const TextStyle(color: Colors.white),
+              overflow: TextOverflow.ellipsis,
+            )),
           ],
         ),
       ),

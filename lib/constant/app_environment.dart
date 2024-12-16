@@ -1,3 +1,3 @@
 class AppEnvironment {
-  static const String BASE_URL = 'https://5330-42-118-145-28.ngrok-free.app';
+  static const String BASE_URL = 'https://da48-1-53-82-124.ngrok-free.app';
 }
