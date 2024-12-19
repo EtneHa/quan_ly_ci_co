@@ -12,6 +12,7 @@ class InputTextField extends StatelessWidget {
   final int? maxLines;
   final Widget? suffixIcon;
   final List<TextInputFormatter>? inputFormatters;
+  final FocusNode? focusNode;
 
   const InputTextField(
       {super.key,
@@ -23,6 +24,7 @@ class InputTextField extends StatelessWidget {
       this.keyboardType,
       this.onChanged,
       this.suffixIcon,
+      this.focusNode,
       this.maxLines = 1,
       this.inputFormatters});
 
@@ -36,6 +38,7 @@ class InputTextField extends StatelessWidget {
       onChanged: onChanged,
       maxLines: maxLines,
       inputFormatters: inputFormatters,
+      focusNode: focusNode,
       decoration: InputDecoration(
           labelText: label,
           hintText: hint,

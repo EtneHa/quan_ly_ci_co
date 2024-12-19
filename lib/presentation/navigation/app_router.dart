@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quan_ly_ci_co/presentation/navigation/app_navigation.dart';
+import 'package:quan_ly_ci_co/presentation/screen/cham-cong/cham_cong_screen.dart';
+import 'package:quan_ly_ci_co/presentation/screen/cham-cong/cubit/cham_cong_cubit.dart';
 import 'package:quan_ly_ci_co/presentation/screen/dashboard/logger/logger_screen.dart';
 import 'package:quan_ly_ci_co/presentation/screen/dashboard/navigation_screen.dart';
 import 'package:quan_ly_ci_co/presentation/screen/dashboard/bangcong/bangcong_screen.dart';
@@ -32,6 +34,16 @@ final GoRouter appGoRouter = GoRouter(
         return BlocProvider(
           create: (context) => SignInCubit(),
           child: const SignInScreen(),
+        );
+      },
+    ),
+    GoRoute(
+      name: 'cham-cong',
+      path: '/cham-cong',
+      builder: (BuildContext context, GoRouterState state) {
+        return BlocProvider(
+          create: (context) => ChamCongCubit(),
+          child: const ChamCongScreen(),
         );
       },
     ),
