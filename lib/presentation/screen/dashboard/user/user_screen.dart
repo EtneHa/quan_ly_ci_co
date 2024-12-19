@@ -92,18 +92,22 @@ class UserScreen extends StatelessWidget {
                                         title: 'Thêm nhân viên',
                                         actions: [
                                           OutlinedButtonApp(
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
                                               child: Text('Huỷ'.toUpperCase(),
                                                   style: TextStylesApp.medium(
                                                       color: Colors.blue))),
                                           const SizedBox(width: 8),
                                           FilledButtonApp(
-                                            onPressed: () {
+                                            onPressed: () async {
                                               if (formKey.currentState!
                                                   .validate()) {
-                                                context
+                                                final result = await context
                                                     .read<UserCubit>()
                                                     .createUser();
+                                                if (result)
+                                                  Navigator.pop(context);
                                               }
                                             },
                                             child: Text(
@@ -112,9 +116,12 @@ class UserScreen extends StatelessWidget {
                                                     color: Colors.white)),
                                           )
                                         ],
-                                        content: Form(
-                                            key: formKey,
-                                            child: CreateUserForm())),
+                                        content: BlocProvider.value(
+                                          value: context.read<UserCubit>(),
+                                          child: Form(
+                                              key: formKey,
+                                              child: CreateUserForm()),
+                                        )),
                                     child: Text('Thêm nhân viên'.toUpperCase(),
                                         style: TextStylesApp.medium(
                                             color: Colors.white)))
