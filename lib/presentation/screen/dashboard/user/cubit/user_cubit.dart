@@ -1,5 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quan_ly_ci_co/core/apps/enums/base_screen_state.dart';
+import 'package:quan_ly_ci_co/core/utils/toast.dart';
+import 'package:quan_ly_ci_co/data/remote/request/create_user_input.dart';
 import 'package:quan_ly_ci_co/data/remote/request/pagination_params.dart';
 import 'package:quan_ly_ci_co/data/remote/user_repository.dart';
 import 'package:quan_ly_ci_co/domain/models/user_model.dart';
@@ -179,5 +181,56 @@ class UserCubit extends Cubit<UserState> {
 
   void search(String value) {}
 
-  void createUser() {}
+  Future<bool> createUser() async {
+    try {
+      final input = CreateUserInput(
+        ten: state.fullName ?? '',
+        ngaysinh: state.birthDay,
+        sodienthoai: state.phoneNumber ?? '',
+        phongban: state.department ?? '',
+        chucvu: state.role ?? '',
+        email: state.email ?? '',
+        ngaybatdau: state.onBoardingDate,
+      );
+      // Call API to create user
+      final res = await _repo.createUser(input);
+      if (res?.success == false) {
+        ToastApp.showError(res?.message ?? 'Create user failed');
+        return false;
+      }
+      ToastApp.showSuccess('Create user success');
+      return true;
+    } catch (e) {
+      ToastApp.showError(e.toString());
+      return false;
+    }
+  }
+
+  void updateFullName(String value) {
+    emit(state.copyWith(fullName: value));
+  }
+
+  void updateBirthDay(String value) {
+    emit(state.copyWith(birthDay: value));
+  }
+
+  void updatePhoneNumber(String value) {
+    emit(state.copyWith(phoneNumber: value));
+  }
+
+  void updateDepartment(String value) {
+    emit(state.copyWith(department: value));
+  }
+
+  void updateRole(String value) {
+    emit(state.copyWith(role: value));
+  }
+
+  void updateEmail(String value) {
+    emit(state.copyWith(email: value));
+  }
+
+  void updateOnBoardingDate(String value) {
+    emit(state.copyWith(onBoardingDate: value));
+  }
 }

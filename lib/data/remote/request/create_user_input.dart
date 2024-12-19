@@ -4,6 +4,8 @@ class CreateUserInput {
   final String phongban;
   final String chucvu;
   final String? ngaybatdau;
+  final String? sodienthoai;
+  final String? email;
 
   CreateUserInput({
     required this.ten,
@@ -11,6 +13,8 @@ class CreateUserInput {
     required this.phongban,
     required this.chucvu,
     this.ngaybatdau,
+    this.sodienthoai,
+    this.email,
   });
 
   Map<String, dynamic> toJson() => {
@@ -19,5 +23,7 @@ class CreateUserInput {
         'phongban': phongban,
         'chucvu': chucvu,
         'ngaybatdau': ngaybatdau,
+        'sodienthoai': sodienthoai,
+        'email': email,
       };
 }
