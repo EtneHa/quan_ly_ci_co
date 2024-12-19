@@ -7,18 +7,37 @@ class BangCongState extends Equatable {
   final String? errorText;
   final List<BangCongModel>? chamgCongData;
 
+  final String? id;
+  final String? date;
+  final String? gioVao;
+  final String? gioRa;
+
   const BangCongState(
-      {required this.screenState, this.errorText, this.chamgCongData});
+      {this.id,
+      this.date,
+      this.gioVao,
+      this.gioRa,
+      required this.screenState,
+      this.errorText,
+      this.chamgCongData});
 
   BangCongState copyWith({
     BaseScreenState? screenState,
     String? errorText,
     List<BangCongModel>? chamgCongData,
+    String? id,
+    String? date,
+    String? gioVao,
+    String? gioRa,
   }) {
     return BangCongState(
       screenState: screenState ?? this.screenState,
       errorText: errorText ?? this.errorText,
       chamgCongData: chamgCongData ?? this.chamgCongData,
+      id: id ?? this.id,
+      date: date ?? this.date,
+      gioVao: gioVao ?? this.gioVao,
+      gioRa: gioRa ?? this.gioRa,
     );
   }
 
@@ -27,5 +46,9 @@ class BangCongState extends Equatable {
         screenState,
         errorText,
         chamgCongData,
+        id,
+        date,
+        gioVao,
+        gioRa,
       ];
 }

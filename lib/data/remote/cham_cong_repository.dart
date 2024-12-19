@@ -1,4 +1,5 @@
 import 'package:quan_ly_ci_co/core/utils/toast.dart';
+import 'package:quan_ly_ci_co/data/remote/request/cham_cong_input.dart';
 import 'package:quan_ly_ci_co/data/remote/request/create_user_input.dart';
 import 'package:quan_ly_ci_co/data/remote/request/pagination_params.dart';
 import 'package:quan_ly_ci_co/data/remote/response/base_response.dart';
@@ -25,10 +26,10 @@ class ChamCongRepository {
     }
   }
 
-  Future<BaseResponse?> create(CreateUserInput user) async {
+  Future<BaseResponse?> create(ChamCongInput input) async {
     try {
       final response =
-          await _restApi.post('/api/employee/create', data: user.toJson());
+          await _restApi.post('/api/employee/create', data: input.toJson());
       if (response.statusCode == 200) {
         return CreateUserResponse.fromJson(response.data);
       } else {
@@ -71,9 +72,9 @@ class ChamCongRepository {
     }
   }
 
-  Future<ChamCongResponse?> suaChamCong(String id, String ngay)async {
+  Future<ChamCongResponse?> suaChamCong(ChamCongInput input)async {
     try {
-      final response = await _restApi.post('/api/employee/suachamcong', data: {'id': id, 'ngay': ngay});
+      final response = await _restApi.post('/api/employee/suachamcong', data: input.toJson());
       if (response.statusCode == 200) {
         return ChamCongResponse.fromJson(response.data);
       } else {
