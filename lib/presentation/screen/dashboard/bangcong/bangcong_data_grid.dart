@@ -3,6 +3,8 @@ import 'package:quan_ly_ci_co/core/styles/text_styles_app.dart';
 import 'package:quan_ly_ci_co/domain/models/bangcong_model.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
+final monthLabel = List.generate(31, (dayIndex) => '${dayIndex + 1}/12');
+
 class BangCongDataGrid extends StatelessWidget {
   BangCongDataGrid({super.key, required this.data});
 
@@ -22,15 +24,12 @@ class BangCongDataGrid extends StatelessWidget {
       );
   final List<BangCongModel> data;
 
-  List<GridColumn> chamCongColumns(List<ChamCongModel> chamCong) {
-    return chamCong
+  List<GridColumn> chamCongColumns() {
+    return monthLabel
         .map((e) => GridColumn(
-              columnName: e.label,
+              columnName: e,
               label: _renderChamCongColumnHeader(
-                child: Text(
-                  e.label,
-                  style: _headerStyle,
-                ),
+                child: Text(e, style: _headerStyle),
               ),
             ))
         .toList();
@@ -46,7 +45,7 @@ class BangCongDataGrid extends StatelessWidget {
               children: [
                 SfDataGrid(
                   source: _DataSource(data: data),
-                  columns: [..._columns, ...chamCongColumns(data[0].chamCong)],
+                  columns: [..._columns, ...chamCongColumns()],
                   headerGridLinesVisibility: GridLinesVisibility.none,
                   gridLinesVisibility: GridLinesVisibility.none,
                   columnWidthMode: ColumnWidthMode.fitByCellValue,
@@ -84,7 +83,7 @@ class BangCongDataGrid extends StatelessWidget {
 
   Widget _renderChamCongColumnHeader({
     required Widget child,
-    Alignment alignment = Alignment.centerLeft,
+    Alignment alignment = Alignment.center,
   }) {
     return Container(
         alignment: alignment,
@@ -127,23 +126,32 @@ class _DataSource extends DataGridSource {
                         ),
                         child: _buildStringCell(data[index].name)),
                   )),
-              ...data[index].chamCong.map((e) => DataGridCell<Widget>(
-                  columnName: e.label,
+              ...List.generate(monthLabel.length, (i) {
+                final chamcong = i < data[index].chamCong.length
+                    ? data[index].chamCong[i]
+                    : null;
+                return DataGridCell<Widget>(
+                  columnName: monthLabel[i],
                   value: SizedBox(
                     child: Padding(
                       padding: const EdgeInsets.all(16),
-                      child: (e.checkIn != null || e.checkOut != null)
+                      child: (chamcong?.checkIn != null ||
+                              chamcong?.checkOut != null)
                           ? Column(
                               children: [
-                                if (e.checkIn != null)
-                                  Expanded(child: Text(e.checkIn ?? '')),
-                                if (e.checkOut != null)
-                                  Expanded(child: Text(e.checkOut ?? '')),
+                                if (chamcong?.checkIn != null)
+                                  Expanded(
+                                      child: Text(chamcong?.checkIn ?? '')),
+                                if (chamcong?.checkOut != null)
+                                  Expanded(
+                                      child: Text(chamcong?.checkOut ?? '')),
                               ],
                             )
                           : const Expanded(child: Text('-')),
                     ),
-                  )))
+                  ),
+                );
+              }),
             ])).toList();
   }
 
