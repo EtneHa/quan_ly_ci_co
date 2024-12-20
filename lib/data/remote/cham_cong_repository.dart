@@ -45,8 +45,14 @@ class ChamCongRepository {
 
   Future<ChamCongResponse?> chamCong(String id) async {
     try {
-      final response =
-          await _restApi.post('/api/employee/chamcong', data: {'id': id});
+      final time = DateTime.now();
+      final hour = time.hour;
+      final minute = time.minute;
+      final gio = '$hour:$minute';
+
+      final date = DateTime.now().toString().split(' ')[0];
+      final response = await _restApi.post(EndPoint.DIEM_DANH,
+          data: {'id_nhanvien': id, 'ngay': date, 'gio': gio});
       if (response.statusCode == 200) {
         return ChamCongResponse.fromJson(response.data);
       } else {

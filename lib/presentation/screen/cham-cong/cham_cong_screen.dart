@@ -51,10 +51,10 @@ class _ChamCongScreenState extends State<ChamCongScreen> {
       body: Center(
         child: BlocListener<ChamCongCubit, ChamCongState>(
           listenWhen: (previous, current) =>
-              previous.isSuccess != current.isSuccess,
+              previous.isSuccess != current.isSuccess ||
+              previous.screenState != previous.screenState,
           listener: (context, state) {
-            print(state.isSuccess);
-            if (state.isSuccess) {
+            if (state.isSuccess && state.screenState == BaseScreenState.none) {
               ToastApp.showSuccess('Chấm công thành công');
               _idController.clear();
               context.read<ChamCongCubit>().resetState();
@@ -116,11 +116,10 @@ class _ChamCongScreenState extends State<ChamCongScreen> {
                         ),
                         const SizedBox(height: 32),
                         FilledButtonApp(
-                          onPressed: _handleChamCong,
-                          label: 'Chấm công'
-                        ),
+                            onPressed: _handleChamCong, label: 'Chấm công'),
                       ],
-                    ),                    )
+                    ),
+                  )
                 ],
               ),
             ),
