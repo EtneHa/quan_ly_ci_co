@@ -34,7 +34,8 @@ export interface UpdateChamCongRawData {
 }
 
 export interface ChamCong30DaysRawData {
-  id_nhanvien: string;
+  giovao?: string;
+  giora?: string;
 }
 
 const tableName = "chamcong";
@@ -112,13 +113,13 @@ class ChamCong {
     connection.query(query, [id], callback);
   }
   static ChamCongInLast30Days(
-    data: ChamCong30DaysRawData,
+    data: {id: string},
     callback: (err: QueryError | null, results: ChamCong30DaysRawData[]) => void
   ): void {
     const querychamcong30ngay = `SELECT * FROM ${tableName} WHERE id_nhanvien = ? AND ngay >= CURDATE() - INTERVAL 30 DAY ORDER BY ngay DESC`;
     connection.query(
       querychamcong30ngay,
-      [data.id_nhanvien],
+      [data.id],
       (error: QueryError | null, results: any) => {
         if (error) {
           callback(error, []);

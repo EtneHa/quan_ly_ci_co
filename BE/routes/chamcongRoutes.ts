@@ -18,6 +18,7 @@ import {
   GetAllChamCong30Response,
 } from "../data_model";
 import { QueryError } from "mysql2";
+import NhanVien, { NhanVienRawData } from "../models/NhanVien";
 
 const router = express.Router();
 
@@ -122,38 +123,53 @@ router.post("/capnhatdiemdanh", (req: Request, res: Response): void => {
   });
 });
 router.get("chamcong30days", (req: Request, res: Response): void => {
-  const { id_nhanvien } = req.params as ChamCong30ngayInput; // Lấy id nhân viên từ params
-  // const { limit, page, sortBy } = req.body as PaginationRequest;
-  if (!id_nhanvien) {
-    const response: ChamCongInLast30DaysResponse = {
-      success: false,
-      message: "All required fields must be provided.",
-      data: null,
-    };
-    res.status(400).json(response);
-    return;
-  }
-  const data: ChamCong30DaysRawData = {
-    id_nhanvien: id_nhanvien!,
-  };
+  const { limit, page, sortBy, search } = req.body as PaginationRequest;
 
-  ChamCong.ChamCongInLast30Days(data, (err, results) => {
-    if (err) {
-      return res.status(500).json({
-        success: false,
-        message: "Lỗi khi lấy dữ liệu chấm công.",
-        data: null,
+  NhanVien.getAll(
+    { limit, page, sortBy, search },
+    (err: Error | null, users: NhanVienRawData[]) => {
+      if (err) {
+        console.error(err);
+        return res.status(404).send("Error fetching users");
+      }
+
+      const response = users.map((user) => {
+        let userChamCong: {
+          id_nhanvien: number;
+          ten: string;
+          phong_ban: string;
+          cham_congs: ChamCong30DaysRawData[];
+        } = {
+          id_nhanvien: user.id,
+          ten: user.ten,
+          phong_ban: user.phongban,
+          cham_congs: [],
+        };
+
+        ChamCong.ChamCongInLast30Days(
+          { id: user.id.toString() },
+          (err, results) => {
+            if (err) {
+              console.error(err);
+              return res.status(500).json({
+                success: false,
+                message: "Error fetching cham cong data",
+                data: null,
+              });
+            }
+            userChamCong.cham_congs = results;
+          }
+        );
+      });
+
+
+      res.json({
+        success: true,
+        message: "Get all cham cong in last 30 days success",
+        data: response,
       });
     }
-
-    const response = {
-      success: true,
-      message: "Lấy dữ liệu chấm công thành công.",
-      data: results,
-    };
-
-    res.json(response);
-  });
+  );
 });
 // router.get("/getAllChamCong", (req: Request, res: Response): void => {
 //   const { limit = 10, page = 1 } = req.query; // Mặc định lấy 10 nhân viên mỗi trang
