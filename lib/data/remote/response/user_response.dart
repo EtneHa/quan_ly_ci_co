@@ -13,7 +13,7 @@ class ListUserResponse extends BaseResponse {
           .toList(),
       success: json['success'] as bool,
       message: json['message'] as String,
-      totalCount: json['total'] as int?,
+      totalCount: json['totalCount'] as int?,
     );
   }
 }

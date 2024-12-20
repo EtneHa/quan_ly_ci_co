@@ -1,13 +1,15 @@
 class PaginationParams {
   final int page;
   final int limit;
+  final String? search;
 
-  PaginationParams({this.page = 1, this.limit = 10});
+  PaginationParams({this.page = 1, this.limit = 10, this.search});
 
   Map<String, dynamic> toJson() {
     return {
       'page': page,
       'limit': limit,
+      'search': search
     };
   }
 

@@ -26,14 +26,6 @@ class BangCongScreen extends StatelessWidget {
         ),
         body: BlocBuilder<BangCongCubit, BangCongState>(
           builder: (context, state) {
-            if (state.screenState == BaseScreenState.loading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            if (state.screenState == BaseScreenState.loading) {
-              return Center(child: Text(state.errorText!));
-            }
-
             return Container(
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -63,18 +55,13 @@ class BangCongScreen extends StatelessWidget {
                                   child: InputTextField(
                                     label: 'Tìm kiếm',
                                     onChanged: (value) {
-                                      // context.read<UserCubit>().search(value);
-                                    },
-                                    hint: 'Mã nhân viên, Họ tên,...',
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-                                SizedBox(
-                                  width: 276,
-                                  child: InputTextField(
-                                    label: 'Tìm kiếm',
-                                    onChanged: (value) {
-                                      // context.read<UserCubit>().search(value);
+                                      Future.delayed(
+                                          const Duration(milliseconds: 500),
+                                          () {
+                                        context
+                                            .read<BangCongCubit>()
+                                            .search(value);
+                                      });
                                     },
                                     hint: 'Mã nhân viên, Họ tên,...',
                                   ),
@@ -120,12 +107,28 @@ class BangCongScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 24),
                           Expanded(
-                              child: BangCongDataGrid(
+                              child: BlocBuilder<BangCongCubit, BangCongState>(
+                            builder: (context, state) {
+                              if (state.screenState ==
+                                  BaseScreenState.loading) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              }
+
+                              if (state.screenState ==
+                                  BaseScreenState.loading) {
+                                return Center(child: Text(state.errorText!));
+                              }
+
+                              return BangCongDataGrid(
                                   page: state.page,
                                   limit: state.limit,
                                   total: state.total,
-                                  onPageChanged: context.read<BangCongCubit>().loadData,
-                                  data: state.chamgCongData ?? [])),
+                                  onPageChanged:
+                                      context.read<BangCongCubit>().loadData,
+                                  data: state.chamgCongData ?? []);
+                            },
+                          )),
                         ],
                       ),
                     ),

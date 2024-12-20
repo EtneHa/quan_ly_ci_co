@@ -75,7 +75,7 @@ class BangCongDataGrid extends StatelessWidget {
               Spacer(),
               Text('Rows per page: '),
               DropdownButton<int>(
-                value: 10,
+                value: limit,
                 items: [10, 20, 50, 100]
                     .map((e) => DropdownMenuItem<int>(
                           value: e,

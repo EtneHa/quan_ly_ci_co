@@ -11,9 +11,8 @@ class NavigationScreen extends StatefulWidget {
 
 class _NavigationScreenState extends State<NavigationScreen> {
   static const List<String> _navigationPath = [
-    'dashboard',
-    'logger',
     'user',
+    'logger',
     'bangcong'
   ];
 
@@ -44,8 +43,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
                           child: Assets.svg.logo.svg(width: 120, height: 24))),
                   const SizedBox(height: 24),
                   ListTile(
-                    leading: Icon(Icons.dashboard),
-                    title: Text('Dashboard'),
+                    leading: Icon(Icons.person),
+                    title: Text('User'),
                     onTap: () => _onItemTapped(0),
                   ),
                   ListTile(
@@ -54,14 +53,9 @@ class _NavigationScreenState extends State<NavigationScreen> {
                     onTap: () => _onItemTapped(1),
                   ),
                   ListTile(
-                    leading: Icon(Icons.person),
-                    title: Text('User'),
-                    onTap: () => _onItemTapped(2),
-                  ),
-                  ListTile(
                     leading: Icon(Icons.calendar_month_rounded),
                     title: Text('Bang Cong'),
-                    onTap: () => _onItemTapped(3),
+                    onTap: () => _onItemTapped(2),
                   ),
                 ],
               ),

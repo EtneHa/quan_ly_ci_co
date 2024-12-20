@@ -24,14 +24,6 @@ class UserScreen extends StatelessWidget {
       child: Scaffold(
         body: BlocBuilder<UserCubit, UserState>(
           builder: (context, state) {
-            if (state.screenState == BaseScreenState.loading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            if (state.screenState == BaseScreenState.loading) {
-              return Center(child: Text(state.errorText!));
-            }
-
             return Container(
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -61,22 +53,26 @@ class UserScreen extends StatelessWidget {
                                   child: InputTextField(
                                     label: 'Tìm kiếm',
                                     onChanged: (value) {
-                                      context.read<UserCubit>().search(value);
+                                      Future.delayed(
+                                          const Duration(milliseconds: 500),
+                                          () {
+                                        context.read<UserCubit>().search(value);
+                                      });
                                     },
                                     hint: 'Mã nhân viên, Họ tên,...',
                                   ),
                                 ),
-                                const SizedBox(width: 16),
-                                SizedBox(
-                                  width: 276,
-                                  child: InputTextField(
-                                    label: 'Tìm kiếm',
-                                    onChanged: (value) {
-                                      context.read<UserCubit>().search(value);
-                                    },
-                                    hint: 'Mã nhân viên, Họ tên,...',
-                                  ),
-                                ),
+                                // const SizedBox(width: 16),
+                                // SizedBox(
+                                //   width: 276,
+                                //   child: InputTextField(
+                                //     label: 'Tìm kiếm',
+                                //     onChanged: (value) {
+                                //       context.read<UserCubit>().search(value);
+                                //     },
+                                //     hint: 'Mã nhân viên, Họ tên,...',
+                                //   ),
+                                // ),
                                 const Spacer(),
                                 const SizedBox(width: 16),
                                 OutlinedButtonApp(
@@ -134,13 +130,27 @@ class UserScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 24),
-                          Expanded(
-                              child: UserDataGrid(
-                                  onPageChanged: context.read<UserCubit>().loadUsers,
+                          Expanded(child: BlocBuilder<UserCubit, UserState>(
+                            builder: (context, state) {
+                              if (state.screenState ==
+                                  BaseScreenState.loading) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              }
+
+                              if (state.screenState ==
+                                  BaseScreenState.loading) {
+                                return Center(child: Text(state.errorText!));
+                              }
+                              return UserDataGrid(
+                                  onPageChanged:
+                                      context.read<UserCubit>().loadUsers,
                                   data: state.users ?? [],
                                   total: state.total,
                                   page: state.page,
-                                  limit: state.limit)),
+                                  limit: state.limit);
+                            },
+                          )),
                         ],
                       ),
                     ),

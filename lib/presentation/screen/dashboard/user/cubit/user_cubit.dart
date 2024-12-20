@@ -154,11 +154,14 @@ class UserCubit extends Cubit<UserState> {
   UserCubit() : super(const UserState(screenState: BaseScreenState.none));
   final _repo = UserRepository();
 
-  Future<void> loadUsers(int page, int limit) async {
+  Future<void> loadUsers(int page, int limit, {String? search}) async {
     try {
-      emit(state.copyWith(screenState: BaseScreenState.loading, page: page, limit: limit));
-      final res =
-          await _repo.getUserList(PaginationParams(page: page, limit: limit));
+      emit(state.copyWith(
+          screenState: BaseScreenState.loading, page: page, limit: limit));
+      final res = await _repo.getUserList(PaginationParams(
+          page: page,
+          limit: limit,
+          search: search ?? (searchText?.trim() == '' ? null : searchText)));
       if (res?.success == false) {
         emit(state.copyWith(
           screenState: BaseScreenState.error,
@@ -168,10 +171,9 @@ class UserCubit extends Cubit<UserState> {
       }
 
       emit(state.copyWith(
-        screenState: BaseScreenState.success,
-        users: (res?.data ?? []).map((user) => user.toUserModel()).toList(),
-        total: res?.totalCount ?? 0
-      ));
+          screenState: BaseScreenState.success,
+          users: (res?.data ?? []).map((user) => user.toUserModel()).toList(),
+          total: res?.totalCount ?? 0));
     } catch (e) {
       emit(state.copyWith(
         screenState: BaseScreenState.error,
@@ -180,7 +182,11 @@ class UserCubit extends Cubit<UserState> {
     }
   }
 
-  void search(String value) {}
+  String? searchText;
+  void search(String value) {
+    searchText = value;
+    loadUsers(1, state.limit, search: value);
+  }
 
   Future<bool> createUser() async {
     try {

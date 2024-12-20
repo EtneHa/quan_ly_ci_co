@@ -6,26 +6,31 @@ import 'package:quan_ly_ci_co/data/remote/request/cham_cong_input.dart';
 import 'package:quan_ly_ci_co/data/remote/request/pagination_params.dart';
 import 'package:quan_ly_ci_co/domain/models/bangcong_model.dart';
 import 'bangcong_state.dart';
+
 class BangCongCubit extends Cubit<BangCongState> {
   BangCongCubit()
       : super(const BangCongState(screenState: BaseScreenState.none));
 
   final _repo = ChamCongRepository();
 
-  void loadData(int page, int limit) async {
-    emit(state.copyWith(screenState: BaseScreenState.loading, limit: limit, page: page));
+  void loadData(int page, int limit, {String? search}) async {
+    emit(state.copyWith(
+        screenState: BaseScreenState.loading, limit: limit, page: page));
     try {
-      final res = await _repo.getAll(PaginationParams(page: page, limit: limit));
+      final res = await _repo.getAll(PaginationParams(
+          page: page,
+          limit: limit,
+          search: search ?? (searchText?.trim() == '' ? null : searchText)));
       if (res?.success == false) {
         emit(state.copyWith(
             screenState: BaseScreenState.error, errorText: res?.message));
         return;
       }
       emit(state.copyWith(
-        screenState: BaseScreenState.success,
-        chamgCongData: res?.data.map((e) => e.toBangCongModel()).toList() ?? [],
-        total: res?.totalCount
-      ));
+          screenState: BaseScreenState.success,
+          chamgCongData:
+              res?.data.map((e) => e.toBangCongModel()).toList() ?? [],
+          total: res?.totalCount));
     } catch (e) {
       emit(state.copyWith(
           screenState: BaseScreenState.loading, errorText: e.toString()));
@@ -102,5 +107,11 @@ class BangCongCubit extends Cubit<BangCongState> {
 
   void updateGioRa(String p1) {
     emit(state.copyWith(gioRa: p1));
+  }
+
+  String? searchText;
+  void search(String value) {
+    searchText = value;
+    loadData(1, state.limit, search: value);
   }
 }
