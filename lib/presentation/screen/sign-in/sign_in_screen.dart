@@ -19,9 +19,9 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController =
-      TextEditingController(text: 'admin@example.com');
+      TextEditingController(text: 'admin1@example.com');
   final TextEditingController _passwordController =
-      TextEditingController(text: 'adminpassword123');
+      TextEditingController(text: 'adminpass123');
   bool obscureText = true;
 
   void _signIn() {

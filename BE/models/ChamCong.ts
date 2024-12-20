@@ -1,4 +1,4 @@
-import { Connection, QueryError, QueryResult } from "mysql2";
+import { Connection, QueryError, QueryResult, RowDataPacket } from "mysql2";
 import connection from "../db"; // Assuming db.ts uses a connection pool
 import { PaginationRequest } from "../data_model";
 
@@ -46,7 +46,9 @@ class ChamCong {
     data: DiemDanhRawData,
     callback: (err: QueryError | null, results: any) => void
   ): void {
+    console.log("diemdanhaa");
     const { id_nhanvien, ngay, gio } = data;
+
     const queryChamCong = `SELECT * FROM ${tableName} WHERE id_nhanvien = ? AND ngay = ?`;
     connection.query(
       queryChamCong,
@@ -66,6 +68,80 @@ class ChamCong {
     );
   }
 
+  // static diemdanh(
+  //   data: DiemDanhRawData,
+  //   callback: (err: QueryError | null, results: any) => void
+  // ): void {
+  //   console.log("aasdasd", data);
+  //   const { id_nhanvien, ngay, gio } = data;
+
+  //   // Truy vấn để lấy tên và phòng ban của nhân viên từ bảng nhanvien
+  //   const queryNhanVien = `SELECT n.ten, n.phongbanFROM nhanvien nWHERE n.id = ?`;
+
+  //   connection.query(
+  //     queryNhanVien,
+  //     [id_nhanvien],
+  //     (errorNhanVien, resultsNhanVien: RowDataPacket[]) => {
+  //       console.log("asdaaa", errorNhanVien, resultsNhanVien);
+  //       // Khai báo kiểu mảng RowDataPacket
+  //       if (errorNhanVien) {
+  //         console.error("Error fetching employee info:", errorNhanVien);
+  //         callback(errorNhanVien, null);
+  //         return;
+  //       }
+
+  //       if (resultsNhanVien.length === 0) {
+  //         console.log("No employee found with the given ID");
+  //         callback(null, null);
+  //         return;
+  //       }
+
+  //       // Lấy tên và phòng ban từ kết quả
+  //       const { ten, phongban } = resultsNhanVien[0]; // Accessing the first element safely
+
+  //       // Bây giờ tiến hành chấm công
+  //       const queryChamCong = `SELECT * FROM ${tableName} WHERE id_nhanvien = ? AND ngay = ?`;
+  //       connection.query(
+  //         queryChamCong,
+  //         [id_nhanvien, ngay],
+  //         (errorChamCong, resultsChamCong: RowDataPacket[]) => {
+  //           console.log("asd", errorChamCong, resultsChamCong);
+  //           // Kiểu mảng RowDataPacket
+  //           if (errorChamCong) {
+  //             const queryInsert = `INSERT INTO ${tableName} (id_nhanvien, ngay, giovao) VALUES (?, ?, ?)`;
+  //             connection.query(
+  //               queryInsert,
+  //               [id_nhanvien, ngay, gio],
+  //               (insertError, insertResults) => {
+  //                 if (insertError) {
+  //                   callback(insertError, null);
+  //                 } else {
+  //                   // Kiểm tra OkPacket (trả về đối tượng chứa affectedRows khi INSERT/UPDATE)
+  //                   callback(null, { ...insertResults, ten, phongban });
+  //                 }
+  //               }
+  //             );
+  //           } else if (resultsChamCong.length > 0) {
+  //             // Nếu đã có chấm công cho ngày này, cập nhật giờ ra
+  //             const queryUpdate = `UPDATE ${tableName} SET giora = ? WHERE id_nhanvien = ? AND ngay = ?`;
+  //             connection.query(
+  //               queryUpdate,
+  //               [gio, id_nhanvien, ngay],
+  //               (updateError, updateResults) => {
+  //                 if (updateError) {
+  //                   callback(updateError, null);
+  //                 } else {
+  //                   // Kiểm tra OkPacket (trả về đối tượng chứa affectedRows khi INSERT/UPDATE)
+  //                   callback(null, { ...updateResults, ten, phongban });
+  //                 }
+  //               }
+  //             );
+  //           }
+  //         }
+  //       );
+  //     }
+  //   );
+  // }
   static getAll(
     callback: (err: QueryError | null, results: ChamCongRawData[]) => void
   ): void {

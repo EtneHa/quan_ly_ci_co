@@ -19,6 +19,7 @@ const router = express.Router();
 
 router.post("/getAllNhanVien", (req: Request, res: Response): void => {
   const { limit, page, sortBy, search } = req.body as PaginationRequest;
+  console.log("asdwdadad", limit, page, sortBy, search);
 
   NhanVien.getAll(
     { limit, page, sortBy, search },
@@ -42,7 +43,7 @@ router.post("/getAllNhanVien", (req: Request, res: Response): void => {
 
 router.post("/createNhanVien", (req: Request, res: Response): void => {
   // Destructure the request body to get the necessary data
-  const { ten, ngaysinh, sodienthoai, phongban, chucvu, ngaybatdau } =
+  const { ten, ngaysinh, sodienthoai, phongban, chucvu, email, ngaybatdau } =
     req.body as TaoNhanVienInput;
 
   // Validate required fields
@@ -63,6 +64,7 @@ router.post("/createNhanVien", (req: Request, res: Response): void => {
     sodienthoai: sodienthoai!,
     phongban: phongban!,
     chucvu: chucvu!,
+    email: email!,
     ngaybatdau: ngaybatdau!,
   };
   NhanVien.create(data, (err: Error | null, id: number) => {

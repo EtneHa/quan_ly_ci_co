@@ -43,6 +43,7 @@ router.get("/getAllChamCong", (req: Request, res: Response): void => {
 router.post("/diemdanh", (req: Request, res: Response): void => {
   // Destructure the request body to get the necessary data
   const { id_nhanvien, ngay, gio } = req.body as TaoChamCongInput;
+  console.log("asdwdasdad", id_nhanvien);
 
   // Validate required fields
   if (!id_nhanvien || !ngay || !gio) {
@@ -61,6 +62,8 @@ router.post("/diemdanh", (req: Request, res: Response): void => {
     ngay: ngay!,
     gio: gio!,
   };
+
+  console.log("asdwasdas", data);
 
   ChamCong.diemdanh(data, (err: Error | null, id: number) => {
     if (err) {

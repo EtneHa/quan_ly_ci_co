@@ -4,5 +4,6 @@ export type TaoNhanVienInput = {
   sodienthoai?: string;
   phongban?: string;
   chucvu?: string;
+  email?: string;
   ngaybatdau?: string;
 };
