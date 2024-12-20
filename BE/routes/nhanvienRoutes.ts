@@ -22,7 +22,7 @@ router.post("/getAllNhanVien", (req: Request, res: Response): void => {
 
   NhanVien.getAll(
     { limit, page, sortBy, search },
-    (err: Error | null, users: NhanVienRawData[]) => {
+    (err: Error | null, users: NhanVienRawData[], totalCount) => {
       if (err) {
         console.error(err);
         return res.status(404).send("Error fetching users");
@@ -32,6 +32,7 @@ router.post("/getAllNhanVien", (req: Request, res: Response): void => {
         success: true,
         message: "Get all nhan vien success",
         data: users,
+        totalCount: totalCount,
       };
 
       res.json(response);

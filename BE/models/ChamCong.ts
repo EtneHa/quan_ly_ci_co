@@ -168,6 +168,72 @@ class ChamCong {
       );
     });
   }
+
+  //lưu giữ để sửa code
+
+  // static async ChamCongInLast30Days(data: { id: string }): Promise<any[]> {
+  //   // Lấy ngày hiện tại và tính 30 ngày trước đó
+  //   const today = new Date();
+  //   const startDate = new Date(today);
+  //   startDate.setDate(today.getDate() - 29); // Tính 30 ngày gần nhất từ ngày hiện tại
+
+  //   // Định dạng ngày theo dạng 'YYYY-MM-DD'
+  //   const formatDate = (date: Date): string => {
+  //     const year = date.getFullYear();
+  //     const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  //     const day = date.getDate().toString().padStart(2, "0");
+  //     return `${year}-${month}-${day}`;
+  //   };
+
+  //   const formattedStartDate = formatDate(startDate);
+  //   const formattedToday = formatDate(today);
+
+  //   const queryChamCong30Ngay = `SELECT ngay, giovao, giora
+  //                                 FROM chamcong
+  //                                 WHERE id_nhanvien = ?
+  //                                   AND ngay BETWEEN ? AND ?
+  //                                 ORDER BY ngay DESC`;
+
+  //   return new Promise((resolve, reject) => {
+  //     connection.query(
+  //       queryChamCong30Ngay,
+  //       [data.id, formattedStartDate, formattedToday], // Truyền ngày bắt đầu và kết thúc
+  //       (error: QueryError | null, results: any[]) => {
+  //         if (error) {
+  //           reject(error); // Nếu có lỗi thì reject promise
+  //         } else {
+  //           // Tạo danh sách 30 ngày từ ngày bắt đầu đến ngày hôm nay
+  //           const allDays = [];
+  //           for (let i = 0; i < 30; i++) {
+  //             const date = formatDate(
+  //               new Date(today.getTime() - i * 24 * 60 * 60 * 1000)
+  //             ); // Lấy ngày cụ thể
+  //             const existingDay = results.find(
+  //               (result) => result.ngay === date
+  //             );
+
+  //             if (existingDay) {
+  //               // Nếu có dữ liệu cho ngày này, thêm vào kết quả
+  //               allDays.push({
+  //                 ngay: date,
+  //                 giovao: existingDay.giovao,
+  //                 giora: existingDay.giora,
+  //               });
+  //             } else {
+  //               // Nếu không có dữ liệu cho ngày này, thêm đối tượng rỗng
+  //               allDays.push({ ngay: date, giovao: null, giora: null });
+  //             }
+  //           }
+
+  //           resolve(allDays); // Trả về danh sách dữ liệu cho 30 ngày
+  //         }
+  //       }
+  //     );
+  //   });
+  // }
+
+  //lưu sửa code
+
   // static getAllWithPagination(
   //   page: number,
   //   limit: number,

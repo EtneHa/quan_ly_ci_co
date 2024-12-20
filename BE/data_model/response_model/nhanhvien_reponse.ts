@@ -3,6 +3,7 @@ import { BaseResponse } from "./base_response";
 
 export type GetAllNhanVienResponse = BaseResponse & {
   data: NhanVienRawData[];
+  totalCount: number;
 };
 
 export type CreateNhanVienResponse = BaseResponse & {
