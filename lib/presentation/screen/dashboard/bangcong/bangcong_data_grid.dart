@@ -124,7 +124,7 @@ class _DataSource extends DataGridSource {
                               right: BorderSide(
                                   color: Color.fromRGBO(0, 0, 0, 0.12))),
                         ),
-                        child: _buildStringCell(data[index].name)),
+                        child: _buildStringCell(data[index].department)),
                   )),
               ...List.generate(monthLabel.length, (i) {
                 final chamcong = i < data[index].chamCong.length

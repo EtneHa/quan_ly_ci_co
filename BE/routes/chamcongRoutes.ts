@@ -122,51 +122,36 @@ router.post("/capnhatdiemdanh", (req: Request, res: Response): void => {
     res.json(response);
   });
 });
-router.get("chamcong30days", (req: Request, res: Response): void => {
+router.post("/chamcong30days", (req: Request, res: Response): void => {
   const { limit, page, sortBy, search } = req.body as PaginationRequest;
 
   NhanVien.getAll(
     { limit, page, sortBy, search },
-    (err: Error | null, users: NhanVienRawData[]) => {
+    async (err: Error | null, users: NhanVienRawData[], totalCount) => {
       if (err) {
         console.error(err);
         return res.status(404).send("Error fetching users");
       }
 
-      const response = users.map((user) => {
-        let userChamCong: {
-          id_nhanvien: number;
-          ten: string;
-          phong_ban: string;
-          cham_congs: ChamCong30DaysRawData[];
-        } = {
-          id_nhanvien: user.id,
-          ten: user.ten,
-          phong_ban: user.phongban,
-          cham_congs: [],
-        };
-
-        ChamCong.ChamCongInLast30Days(
-          { id: user.id.toString() },
-          (err, results) => {
-            if (err) {
-              console.error(err);
-              return res.status(500).json({
-                success: false,
-                message: "Error fetching cham cong data",
-                data: null,
-              });
-            }
-            userChamCong.cham_congs = results;
-          }
-        );
-      });
-
+      const response = await Promise.all(
+        users.map(async (user) => {
+          const chamCongData = await ChamCong.ChamCongInLast30Days({
+            id: user.id.toString(),
+          });
+          return {
+            id_nhanvien: user.id,
+            ten: user.ten,
+            phong_ban: user.phongban,
+            cham_congs: chamCongData,
+          };
+        })
+      );
 
       res.json({
         success: true,
         message: "Get all cham cong in last 30 days success",
         data: response,
+        totalCount: totalCount,
       });
     }
   );

@@ -1,6 +1,7 @@
+import 'package:quan_ly_ci_co/constant/enpoints.dart';
 import 'package:quan_ly_ci_co/core/utils/toast.dart';
 import 'package:quan_ly_ci_co/data/remote/request/cham_cong_input.dart';
-import 'package:quan_ly_ci_co/data/remote/request/create_user_input.dart';
+// import 'package:quan_ly_ci_co/data/remote/request/create_user_input.dart';
 import 'package:quan_ly_ci_co/data/remote/request/pagination_params.dart';
 import 'package:quan_ly_ci_co/data/remote/response/base_response.dart';
 import 'package:quan_ly_ci_co/data/remote/response/cham_cong_response.dart';
@@ -12,8 +13,8 @@ class ChamCongRepository {
 
   Future<ListChamCongResponse?> getAll(PaginationParams pagination) async {
     try {
-      final response = await _restApi.get('/api/employee/getall',
-          queryParameters: pagination.toJson());
+      final response = await _restApi.post(EndPoint.Get_ALL_Cham_Cong,
+          data: pagination.toJson());
       if (response.statusCode == 200) {
         return ListChamCongResponse.fromJson(response.data);
       } else {
@@ -42,9 +43,10 @@ class ChamCongRepository {
     }
   }
 
-  Future<ChamCongResponse?> chamCong(String id)async {
+  Future<ChamCongResponse?> chamCong(String id) async {
     try {
-      final response = await _restApi.post('/api/employee/chamcong', data: {'id': id});
+      final response =
+          await _restApi.post('/api/employee/chamcong', data: {'id': id});
       if (response.statusCode == 200) {
         return ChamCongResponse.fromJson(response.data);
       } else {
@@ -57,9 +59,10 @@ class ChamCongRepository {
     }
   }
 
-  Future<ChamCongResponse?> xoaChamCong(String id)async {
+  Future<ChamCongResponse?> xoaChamCong(String id) async {
     try {
-      final response = await _restApi.post('/api/employee/xoachamcong', data: {'id': id});
+      final response =
+          await _restApi.post('/api/employee/xoachamcong', data: {'id': id});
       if (response.statusCode == 200) {
         return ChamCongResponse.fromJson(response.data);
       } else {
@@ -72,9 +75,10 @@ class ChamCongRepository {
     }
   }
 
-  Future<ChamCongResponse?> suaChamCong(ChamCongInput input)async {
+  Future<ChamCongResponse?> suaChamCong(ChamCongInput input) async {
     try {
-      final response = await _restApi.post('/api/employee/suachamcong', data: input.toJson());
+      final response = await _restApi.post('/api/employee/suachamcong',
+          data: input.toJson());
       if (response.statusCode == 200) {
         return ChamCongResponse.fromJson(response.data);
       } else {

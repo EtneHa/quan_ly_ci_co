@@ -30,7 +30,7 @@ class ListChamCongResponse extends BaseResponse {
 }
 
 class ChamCongNhanVien {
-  final String? id_nhanvien;
+  final int? id_nhanvien;
   final String? ten;
   final String? phongban;
   final List<ChamCong>? chamCong;
@@ -43,10 +43,10 @@ class ChamCongNhanVien {
 
   factory ChamCongNhanVien.fromJson(Map<String, dynamic> json) {
     return ChamCongNhanVien(
-      id_nhanvien: json['id_nhanvien'] as String,
+      id_nhanvien: json['id_nhanvien'] as int,
       ten: json['ten'] as String,
-      phongban: json['phongban'] as String,
-      chamCong: (json['chamCong'] as List)
+      phongban: json['phong_ban'] as String,
+      chamCong: (json['cham_congs'] as List)
           .map((e) => ChamCong.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
@@ -63,7 +63,7 @@ class ChamCongNhanVien {
 
   BangCongModel toBangCongModel() {
     return BangCongModel(
-      id: id_nhanvien ?? '',
+      id: id_nhanvien.toString() ?? '',
       name: ten ?? '',
       department: phongban ?? '',
       chamCong: chamCong?.map((e) => e.toChamCongModel()).toList() ?? [],

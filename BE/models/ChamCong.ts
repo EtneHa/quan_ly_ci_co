@@ -112,22 +112,61 @@ class ChamCong {
     const query = `DELETE FROM ${tableName} WHERE id = ?`;
     connection.query(query, [id], callback);
   }
-  static ChamCongInLast30Days(
-    data: {id: string},
-    callback: (err: QueryError | null, results: ChamCong30DaysRawData[]) => void
-  ): void {
-    const querychamcong30ngay = `SELECT * FROM ${tableName} WHERE id_nhanvien = ? AND ngay >= CURDATE() - INTERVAL 30 DAY ORDER BY ngay DESC`;
-    connection.query(
-      querychamcong30ngay,
-      [data.id],
-      (error: QueryError | null, results: any) => {
-        if (error) {
-          callback(error, []);
-          return;
+  // static async ChamCongInLast30Days(data: { id: string }): Promise<ChamCong30DaysRawData[]> {
+  //   const querychamcong30ngay = `SELECT ngay,giovao,giora FROM ${tableName} WHERE id_nhanvien = ? ORDER BY ngay DESC`;
+
+  //   return new Promise((resolve, reject) => {
+  //     connection.query(
+  //       querychamcong30ngay,
+  //       [data.id],
+  //       (error: QueryError | null, results: any) => {
+  //         if (error) {
+  //           reject(error); // Reject the promise on error
+  //         } else {
+  //           resolve(results as ChamCong30DaysRawData[]); // Resolve the promise with results
+  //         }
+  //       }
+  //     );
+  //   });
+  // }
+
+  static async ChamCongInLast30Days(data: { id: string }): Promise<any[]> {
+    const querychamcong30ngay = `SELECT ngay, giovao, giora FROM chamcong WHERE id_nhanvien = ? ORDER BY ngay DESC`;
+
+    return new Promise((resolve, reject) => {
+      connection.query(
+        querychamcong30ngay,
+        [data.id],
+        (error: QueryError | null, results: any[]) => {
+          if (error) {
+            reject(error); // Reject the promise if there's an error
+          } else {
+            // Create an array of 30 days (from 1/12 to 30/12)
+            const allDays = [];
+            for (let i = 1; i <= 30; i++) {
+              const date = `2024-12-${i.toString().padStart(2, "0")}`;
+              const existingDay = results.find(
+                (result) => result.ngay === date
+              );
+
+              if (existingDay) {
+                // If there is a record for this day, push the time data
+                allDays.push({
+                  ngay: date,
+                  giovao: existingDay.giovao,
+                  giora: existingDay.giora,
+                });
+              } else {
+                // If no record exists for this day, return an empty object
+                allDays.push({});
+              }
+            }
+
+            resolve(allDays); // Return the array with 30 days of data
+          }
         }
-        callback(null, results as ChamCong30DaysRawData[]);
-      }
-    );
+      );
+    });
   }
   // static getAllWithPagination(
   //   page: number,
@@ -244,10 +283,10 @@ class ChamCong {
 
   //   // Truy vấn lấy dữ liệu nhân viên và chấm công trong 30 ngày gần nhất
   //   const query = `
-  //     SELECT c.id_nhanvien, c.ten, c.phong_ban, 
+  //     SELECT c.id_nhanvien, c.ten, c.phong_ban,
   //            a.giovao, a.giora, a.ngay
   //     FROM nhanvien c
-  //     LEFT JOIN chamcong a ON c.id_nhanvien = a.id_nhanvien 
+  //     LEFT JOIN chamcong a ON c.id_nhanvien = a.id_nhanvien
   //     WHERE a.ngay >= CURDATE() - INTERVAL 30 DAY
   //     GROUP BY c.id_nhanvien
   //     ORDER BY c.ten ASC
@@ -295,106 +334,122 @@ class ChamCong {
   //   );
   // }
 
-//   static getChamCongByPage(
-//     page: number, 
-//     limit: number, 
-//     callback: (err: QueryError | null, results: ChamCong30RawData[], totalCount: number) => void
-//   ): void {
-//     const offset = (page - 1) * limit;
+  //   static getChamCongByPage(
+  //     page: number,
+  //     limit: number,
+  //     callback: (err: QueryError | null, results: ChamCong30RawData[], totalCount: number) => void
+  //   ): void {
+  //     const offset = (page - 1) * limit;
 
-//     // Truy vấn để lấy dữ liệu chấm công của 10 nhân viên
-//     const query = `SELECT c.id_nhanvien, c.ten, c.phong_ban, GROUP_CONCAT(JSON_OBJECT('gio_vao', c.giovao, 'gio_ra', c.giora)) AS cham_congs
-//                    FROM ${tableName} c
-//                    GROUP BY c.id_nhanvien
-//                    LIMIT ? OFFSET ?`;
-    
-//     connection.query(query, [limit, offset], (err: QueryError | null, results: any) => {
-//       if (err) {
-//         callback(err, [], 0);
-//         return;
-//       }
+  //     // Truy vấn để lấy dữ liệu chấm công của 10 nhân viên
+  //     const query = `SELECT c.id_nhanvien, c.ten, c.phong_ban, GROUP_CONCAT(JSON_OBJECT('gio_vao', c.giovao, 'gio_ra', c.giora)) AS cham_congs
+  //                    FROM ${tableName} c
+  //                    GROUP BY c.id_nhanvien
+  //                    LIMIT ? OFFSET ?`;
 
-//       // Truy vấn để lấy tổng số nhân viên để dùng cho phân trang
-//       const countQuery = `SELECT COUNT(DISTINCT id_nhanvien) AS totalCount FROM ${tableName}`;
-//       connection.query(countQuery, (countErr: QueryError | null, countResult: any) => {
-//         if (countErr) {
-//           callback(countErr, [], 0);
-//           return;
-//         }
+  //     connection.query(query, [limit, offset], (err: QueryError | null, results: any) => {
+  //       if (err) {
+  //         callback(err, [], 0);
+  //         return;
+  //       }
 
-//         const totalCount = countResult[0].totalCount;
-//         callback(null, results as ChamCong30RawData[], totalCount);
-//       });
-//     });
-//   }
-static getChamCongByNhanVien(
-  pagination: PaginationRequest,
-  callback: (err: QueryError | null, results: ChamCong30RawData[], totalCount: number) => void
-): void {
-  const { limit, page, sortBy, search } = pagination;
-  const offset = ((page ?? 0) - 1) * (limit ?? 0);
+  //       // Truy vấn để lấy tổng số nhân viên để dùng cho phân trang
+  //       const countQuery = `SELECT COUNT(DISTINCT id_nhanvien) AS totalCount FROM ${tableName}`;
+  //       connection.query(countQuery, (countErr: QueryError | null, countResult: any) => {
+  //         if (countErr) {
+  //           callback(countErr, [], 0);
+  //           return;
+  //         }
 
-  let queryNhanVien = `SELECT * FROM nhanvien`; 
-  if (search) {
-    queryNhanVien += ` WHERE ten LIKE ? OR phongban LIKE ?`;
-  }
-  queryNhanVien += ` ORDER BY ${sortBy || "id"} ASC LIMIT ? OFFSET ?`;
+  //         const totalCount = countResult[0].totalCount;
+  //         callback(null, results as ChamCong30RawData[], totalCount);
+  //       });
+  //     });
+  //   }
+  static getChamCongByNhanVien(
+    pagination: PaginationRequest,
+    callback: (
+      err: QueryError | null,
+      results: ChamCong30RawData[],
+      totalCount: number
+    ) => void
+  ): void {
+    const { limit, page, sortBy, search } = pagination;
+    const offset = ((page ?? 0) - 1) * (limit ?? 0);
 
-  const queryParams = search
-    ? [`%${search}%`, `%${search}%`, limit, offset]
-    : [limit, offset];
-
-  connection.query(queryNhanVien, queryParams, (err: QueryError | null, nhanViens: any[]) => {
-    if (err) {
-      return callback(err, [], 0);
-    }
-
-    let countQuery = `SELECT COUNT(*) AS totalCount FROM nhanvien`;
+    let queryNhanVien = `SELECT * FROM nhanvien`;
     if (search) {
-      countQuery += ` WHERE ten LIKE ? OR phongban LIKE ?`;
+      queryNhanVien += ` WHERE ten LIKE ? OR phongban LIKE ?`;
     }
+    queryNhanVien += ` ORDER BY ${sortBy || "id"} ASC LIMIT ? OFFSET ?`;
 
-    const countQueryParams = search
-      ? [`%${search}%`, `%${search}%`]
-      : [];
+    const queryParams = search
+      ? [`%${search}%`, `%${search}%`, limit, offset]
+      : [limit, offset];
 
-    connection.query(countQuery, countQueryParams, (countErr: QueryError | null, countResult: any[]) => {
-      if (countErr) {
-        return callback(countErr, [], 0);
-      }
+    connection.query(
+      queryNhanVien,
+      queryParams,
+      (err: QueryError | null, nhanViens: any[]) => {
+        if (err) {
+          return callback(err, [], 0);
+        }
 
-      const totalCount = countResult[0]?.totalCount || 0;
-      
-      // Lấy chấm công của từng nhân viên
-      const chamCongQuery = `
+        let countQuery = `SELECT COUNT(*) AS totalCount FROM nhanvien`;
+        if (search) {
+          countQuery += ` WHERE ten LIKE ? OR phongban LIKE ?`;
+        }
+
+        const countQueryParams = search ? [`%${search}%`, `%${search}%`] : [];
+
+        connection.query(
+          countQuery,
+          countQueryParams,
+          (countErr: QueryError | null, countResult: any[]) => {
+            if (countErr) {
+              return callback(countErr, [], 0);
+            }
+
+            const totalCount = countResult[0]?.totalCount || 0;
+
+            // Lấy chấm công của từng nhân viên
+            const chamCongQuery = `
         SELECT id_nhanvien, ngay, giovao, giora
         FROM chamcong
         WHERE id_nhanvien IN (?);
       `;
-      const nhanVienIds = nhanViens.map(nv => nv.id);
-      connection.query(chamCongQuery, [nhanVienIds], (ccErr: QueryError | null, chamCongs: any[]) => {
-        if (ccErr) {
-          return callback(ccErr, [], totalCount);
-        }
+            const nhanVienIds = nhanViens.map((nv) => nv.id);
+            connection.query(
+              chamCongQuery,
+              [nhanVienIds],
+              (ccErr: QueryError | null, chamCongs: any[]) => {
+                if (ccErr) {
+                  return callback(ccErr, [], totalCount);
+                }
 
-        const result = nhanViens.map(nv => {
-          const chamCongForNv = chamCongs.filter(cc => cc.id_nhanvien === nv.id).map(cc => ({
-            gio_vao: cc.giovao,
-            gio_ra: cc.giora,
-          }));
-          return {
-            id_nhanvien: nv.id,
-            ten: nv.ten,
-            phong_ban: nv.phongban,
-            cham_congs: chamCongForNv.slice(0, 30), // Lấy 30 ngày đầu
-          };
-        });
+                const result = nhanViens.map((nv) => {
+                  const chamCongForNv = chamCongs
+                    .filter((cc) => cc.id_nhanvien === nv.id)
+                    .map((cc) => ({
+                      gio_vao: cc.giovao,
+                      gio_ra: cc.giora,
+                    }));
+                  return {
+                    id_nhanvien: nv.id,
+                    ten: nv.ten,
+                    phong_ban: nv.phongban,
+                    cham_congs: chamCongForNv.slice(0, 30), // Lấy 30 ngày đầu
+                  };
+                });
 
-        callback(null, result, totalCount);
-      });
-    });
-  });
-}
+                callback(null, result, totalCount);
+              }
+            );
+          }
+        );
+      }
+    );
+  }
 }
 
 export default ChamCong;

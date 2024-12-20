@@ -16,17 +16,17 @@ class BangCongCubit extends Cubit<BangCongState> {
   void loadData() async {
     emit(state.copyWith(screenState: BaseScreenState.loading));
     try {
-      // await Future.delayed(const Duration(seconds: 1));
-      // final res = await _repo.getAll(PaginationParams(page: 1, limit: 10));
-      // if (res?.success == false) {
-      //   emit(state.copyWith(
-      //       screenState: BaseScreenState.error, errorText: res?.message));
-      //   return;
-      // }
+      await Future.delayed(const Duration(seconds: 1));
+      final res = await _repo.getAll(PaginationParams(page: 1, limit: 10));
+      if (res?.success == false) {
+        emit(state.copyWith(
+            screenState: BaseScreenState.error, errorText: res?.message));
+        return;
+      }
       emit(state.copyWith(
         screenState: BaseScreenState.success,
-        chamgCongData: generateTestData()
-        // chamgCongData: res?.data.map((e) => e.toBangCongModel()).toList() ?? [],
+        // chamgCongData: generateTestData()
+        chamgCongData: res?.data.map((e) => e.toBangCongModel()).toList() ?? [],
       ));
     } catch (e) {
       emit(state.copyWith(
