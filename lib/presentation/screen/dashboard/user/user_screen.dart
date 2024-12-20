@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quan_ly_ci_co/core/apps/enums/base_screen_state.dart';
 import 'package:quan_ly_ci_co/core/styles/box_shadow_app.dart';
 import 'package:quan_ly_ci_co/core/styles/text_styles_app.dart';
+import 'package:quan_ly_ci_co/presentation/navigation/app_navigation.dart';
 import 'package:quan_ly_ci_co/presentation/screen/dashboard/user/cubit/user_cubit.dart';
 import 'package:quan_ly_ci_co/presentation/screen/dashboard/user/cubit/user_state.dart';
 import 'package:quan_ly_ci_co/presentation/screen/dashboard/user/user_data_grid.dart';
@@ -93,7 +94,9 @@ class UserScreen extends StatelessWidget {
                                         actions: [
                                           OutlinedButtonApp(
                                               onPressed: () {
-                                                Navigator.pop(context);
+                                                Navigator.pop(NavigationApp
+                                                    .navigatorKey
+                                                    .currentContext!);
                                               },
                                               child: Text('Huỷ'.toUpperCase(),
                                                   style: TextStylesApp.medium(
@@ -107,7 +110,9 @@ class UserScreen extends StatelessWidget {
                                                     .read<UserCubit>()
                                                     .createUser();
                                                 if (result)
-                                                  Navigator.pop(context);
+                                                  Navigator.pop(NavigationApp
+                                                      .navigatorKey
+                                                      .currentContext!);
                                               }
                                             },
                                             child: Text(
