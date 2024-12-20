@@ -16,7 +16,15 @@ class UserState extends Equatable {
   final String? email;
   final String? onBoardingDate;
 
+  // Pagination
+  final int page;
+  final int limit;
+  final int total;
+
   const UserState({
+    this.page = 1,
+    this.limit = 10,
+    this.total = 0,
     this.fullName,
     this.birthDay,
     this.phoneNumber,
@@ -40,6 +48,9 @@ class UserState extends Equatable {
     String? role,
     String? email,
     String? onBoardingDate,
+    int? page,
+    int? limit,
+    int? total,
   }) {
     return UserState(
       screenState: screenState ?? this.screenState,
@@ -54,6 +65,11 @@ class UserState extends Equatable {
       role: role ?? this.role,
       email: email ?? this.email,
       onBoardingDate: onBoardingDate ?? this.onBoardingDate,
+
+      // Pagination
+      page: page ?? this.page,
+      limit: limit ?? this.limit,
+      total: total ?? this.total,
     );
   }
 
@@ -68,6 +84,9 @@ class UserState extends Equatable {
         department,
         role,
         email,
-        onBoardingDate
+        onBoardingDate,
+        page,
+        limit,
+        total,
       ];
 }

@@ -6,7 +6,13 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 final monthLabel = List.generate(31, (dayIndex) => '${dayIndex + 1}/12');
 
 class BangCongDataGrid extends StatelessWidget {
-  BangCongDataGrid({super.key, required this.data});
+  BangCongDataGrid(
+      {super.key,
+      required this.onPageChanged,
+      required this.data,
+      required this.total,
+      required this.page,
+      required this.limit});
 
   final columnTitles = ['Mã nhân viên', 'Họ và tên', 'Phòng ban'];
 
@@ -23,6 +29,10 @@ class BangCongDataGrid extends StatelessWidget {
         ),
       );
   final List<BangCongModel> data;
+  final int total;
+  final int page;
+  final int limit;
+  final Function(int page, int limit) onPageChanged;
 
   List<GridColumn> chamCongColumns() {
     return monthLabel
@@ -59,6 +69,43 @@ class BangCongDataGrid extends StatelessWidget {
               ],
             ),
           ),
+           Row(
+            children: [
+              Spacer(),
+              Text('Rows per page: '),
+              DropdownButton<int>(
+                value: 10,
+                items: [10, 20, 50, 100]
+                    .map((e) => DropdownMenuItem<int>(
+                          value: e,
+                          child: Text(e.toString()),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  onPageChanged(1, value ?? limit);
+                },
+              ),
+              SizedBox(width: 16),
+              Text('${page * limit - (limit - 1)}-${page * limit} of ${total}'),
+              SizedBox(width: 16),
+              IconButton(
+                padding: const EdgeInsets.all(10),
+                icon: Icon(Icons.arrow_back_ios),
+                onPressed: () {
+                  if (page == 1) return;
+                  onPageChanged(page - 1, limit);
+                },
+              ),
+              IconButton(
+                padding: const EdgeInsets.all(10),
+                icon: Icon(Icons.arrow_forward_ios),
+                onPressed: () {
+                  if (page * limit > total) return;
+                  onPageChanged(page + 1, limit);
+                },
+              ),
+            ],
+          )
         ],
       );
     });

@@ -156,7 +156,7 @@ class UserCubit extends Cubit<UserState> {
 
   Future<void> loadUsers(int page, int limit) async {
     try {
-      emit(state.copyWith(screenState: BaseScreenState.loading));
+      emit(state.copyWith(screenState: BaseScreenState.loading, page: page, limit: limit));
       final res =
           await _repo.getUserList(PaginationParams(page: page, limit: limit));
       if (res?.success == false) {
@@ -170,6 +170,7 @@ class UserCubit extends Cubit<UserState> {
       emit(state.copyWith(
         screenState: BaseScreenState.success,
         users: (res?.data ?? []).map((user) => user.toUserModel()).toList(),
+        total: res?.totalCount ?? 0
       ));
     } catch (e) {
       emit(state.copyWith(

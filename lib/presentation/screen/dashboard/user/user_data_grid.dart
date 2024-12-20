@@ -4,7 +4,13 @@ import 'package:quan_ly_ci_co/domain/models/user_model.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class UserDataGrid extends StatelessWidget {
-  UserDataGrid({super.key, required this.data});
+  UserDataGrid(
+      {super.key,
+      required this.onPageChanged,
+      required this.data,
+      required this.total,
+      required this.page,
+      required this.limit});
 
   final columnTitles = [
     'Mã nhân viên',
@@ -28,6 +34,10 @@ class UserDataGrid extends StatelessWidget {
         ),
       );
   final List<UserModel> data;
+  final int total;
+  final int page;
+  final int limit;
+  final Function(int page, int limit) onPageChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +60,43 @@ class UserDataGrid extends StatelessWidget {
               ],
             ),
           ),
+          Row(
+            children: [
+              Spacer(),
+              Text('Rows per page: '),
+              DropdownButton<int>(
+                value: 10,
+                items: [10, 20, 50, 100]
+                    .map((e) => DropdownMenuItem<int>(
+                          value: e,
+                          child: Text(e.toString()),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  onPageChanged(1, value ?? limit);
+                },
+              ),
+              SizedBox(width: 16),
+              Text('${page * limit - (limit - 1)}-${page * limit} of ${total}'),
+              SizedBox(width: 16),
+              IconButton(
+                padding: const EdgeInsets.all(10),
+                icon: Icon(Icons.arrow_back_ios),
+                onPressed: () {
+                  if (page == 1) return;
+                  onPageChanged(page - 1, limit);
+                },
+              ),
+              IconButton(
+                padding: const EdgeInsets.all(10),
+                icon: Icon(Icons.arrow_forward_ios),
+                onPressed: () {
+                  if (page * limit > total) return;
+                  onPageChanged(page + 1, limit);
+                },
+              ),
+            ],
+          )
         ],
       );
     });

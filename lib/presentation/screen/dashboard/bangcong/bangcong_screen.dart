@@ -19,7 +19,7 @@ class BangCongScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => BangCongCubit()..loadData(),
+      create: (_) => BangCongCubit()..loadData(1, 10),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Bảng Công'),
@@ -121,6 +121,10 @@ class BangCongScreen extends StatelessWidget {
                           const SizedBox(height: 24),
                           Expanded(
                               child: BangCongDataGrid(
+                                  page: state.page,
+                                  limit: state.limit,
+                                  total: state.total,
+                                  onPageChanged: context.read<BangCongCubit>().loadData,
                                   data: state.chamgCongData ?? [])),
                         ],
                       ),

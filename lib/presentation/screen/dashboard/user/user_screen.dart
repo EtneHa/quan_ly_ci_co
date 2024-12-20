@@ -135,7 +135,12 @@ class UserScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 24),
                           Expanded(
-                              child: UserDataGrid(data: state.users ?? [])),
+                              child: UserDataGrid(
+                                  onPageChanged: context.read<UserCubit>().loadUsers,
+                                  data: state.users ?? [],
+                                  total: state.total,
+                                  page: state.page,
+                                  limit: state.limit)),
                         ],
                       ),
                     ),

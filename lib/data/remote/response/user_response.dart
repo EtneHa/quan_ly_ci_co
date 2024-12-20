@@ -2,8 +2,9 @@ import 'package:quan_ly_ci_co/data/remote/response/base_response.dart';
 import 'package:quan_ly_ci_co/domain/models/user_model.dart';
 
 class ListUserResponse extends BaseResponse {
-  ListUserResponse(this.data, {required super.success, required super.message});
+  ListUserResponse(this.data, {required super.success, required super.message, this.totalCount});
   final List<UserData> data;
+  final int? totalCount;
 
   factory ListUserResponse.fromJson(Map<String, dynamic> json) {
     return ListUserResponse(
@@ -12,6 +13,7 @@ class ListUserResponse extends BaseResponse {
           .toList(),
       success: json['success'] as bool,
       message: json['message'] as String,
+      totalCount: json['total'] as int?,
     );
   }
 }

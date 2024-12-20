@@ -12,24 +12,34 @@ class BangCongState extends Equatable {
   final String? gioVao;
   final String? gioRa;
 
+  // Pagination
+  final int page;
+  final int limit;
+  final int total;
+
   const BangCongState(
       {this.id,
       this.date,
       this.gioVao,
       this.gioRa,
       required this.screenState,
+      this.limit = 10,
+      this.total = 0,
+      this.page = 1,
       this.errorText,
       this.chamgCongData});
 
-  BangCongState copyWith({
-    BaseScreenState? screenState,
-    String? errorText,
-    List<BangCongModel>? chamgCongData,
-    String? id,
-    String? date,
-    String? gioVao,
-    String? gioRa,
-  }) {
+  BangCongState copyWith(
+      {BaseScreenState? screenState,
+      String? errorText,
+      List<BangCongModel>? chamgCongData,
+      String? id,
+      String? date,
+      String? gioVao,
+      String? gioRa,
+      int? total,
+      int? limit,
+      int? page}) {
     return BangCongState(
       screenState: screenState ?? this.screenState,
       errorText: errorText ?? this.errorText,
@@ -38,6 +48,10 @@ class BangCongState extends Equatable {
       date: date ?? this.date,
       gioVao: gioVao ?? this.gioVao,
       gioRa: gioRa ?? this.gioRa,
+      // Pagination
+      page: page ?? this.page,
+      limit: limit ?? this.limit,
+      total: total ?? this.total,
     );
   }
 
@@ -50,5 +64,8 @@ class BangCongState extends Equatable {
         date,
         gioVao,
         gioRa,
+        page,
+        total,
+        limit
       ];
 }

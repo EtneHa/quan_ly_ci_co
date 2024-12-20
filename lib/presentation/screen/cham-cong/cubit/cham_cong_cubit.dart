@@ -10,7 +10,7 @@ class ChamCongCubit extends Cubit<ChamCongState> {
   Future<void> chamCong(String employeeId) async {
     emit(state.copyWith(screenState: BaseScreenState.loading, isSuccess: false));
     try {
-      await Future.delayed(const Duration(seconds: 1)); // Simulate API call
+      await Future.delayed(const Duration(seconds: 1));
       emit(state.copyWith(
         screenState: BaseScreenState.success,
         isSuccess: true,

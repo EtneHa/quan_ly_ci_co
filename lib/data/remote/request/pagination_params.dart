@@ -10,4 +10,14 @@ class PaginationParams {
       'limit': limit,
     };
   }
+
+  PaginationParams copyWith({
+    int? page,
+    int? limit,
+  }) {
+    return PaginationParams(
+      page: page ?? this.page,
+      limit: limit ?? this.limit,
+    );
+  }
 }

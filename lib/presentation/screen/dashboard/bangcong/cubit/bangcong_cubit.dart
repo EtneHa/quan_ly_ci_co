@@ -6,18 +6,16 @@ import 'package:quan_ly_ci_co/data/remote/request/cham_cong_input.dart';
 import 'package:quan_ly_ci_co/data/remote/request/pagination_params.dart';
 import 'package:quan_ly_ci_co/domain/models/bangcong_model.dart';
 import 'bangcong_state.dart';
-
 class BangCongCubit extends Cubit<BangCongState> {
   BangCongCubit()
       : super(const BangCongState(screenState: BaseScreenState.none));
 
   final _repo = ChamCongRepository();
 
-  void loadData() async {
-    emit(state.copyWith(screenState: BaseScreenState.loading));
+  void loadData(int page, int limit) async {
+    emit(state.copyWith(screenState: BaseScreenState.loading, limit: limit, page: page));
     try {
-      await Future.delayed(const Duration(seconds: 1));
-      final res = await _repo.getAll(PaginationParams(page: 1, limit: 10));
+      final res = await _repo.getAll(PaginationParams(page: page, limit: limit));
       if (res?.success == false) {
         emit(state.copyWith(
             screenState: BaseScreenState.error, errorText: res?.message));
@@ -25,8 +23,8 @@ class BangCongCubit extends Cubit<BangCongState> {
       }
       emit(state.copyWith(
         screenState: BaseScreenState.success,
-        // chamgCongData: generateTestData()
         chamgCongData: res?.data.map((e) => e.toBangCongModel()).toList() ?? [],
+        total: res?.totalCount
       ));
     } catch (e) {
       emit(state.copyWith(
