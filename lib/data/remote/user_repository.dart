@@ -29,7 +29,7 @@ class UserRepository {
   Future<BaseResponse?> createUser(CreateUserInput user) async {
     try {
       final response =
-          await _restApi.post('/api/employee/create', data: user.toJson());
+          await _restApi.post(EndPoint.CREATE_NHAN_VIEN, data: user.toJson());
       if (response.statusCode == 200) {
         return CreateUserResponse.fromJson(response.data);
       } else {

@@ -1,0 +1,139 @@
+-- Tạo cơ sở dữ liệu
+CREATE DATABASE quanlynhanvien;
+
+-- Sử dụng cơ sở dữ liệu
+USE quanlynhanvien;
+
+-- Bảng nhân viên (nhanvien)
+CREATE TABLE nhanvien (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ten VARCHAR(100), -- Tên nhân viên
+    ngaysinh DATE, -- Ngày sinh
+    phongban VARCHAR(100), -- Phòng ban
+    chucvu VARCHAR(100), -- Chức vụ
+    ngaybatdau DATE -- Ngày bắt đầu làm việc
+);
+
+-- Bảng chấm công (chamcong)
+CREATE TABLE chamcong (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Mã chấm công
+    id_nhanvien INT, -- Mã nhân viên (Khóa ngoại tham chiếu đến bảng nhan_vien)
+    ngay DATE, -- Ngày làm việc
+    giovao TIME, -- Thời gian vào làm
+    giora TIME, -- Thời gian ra về
+    FOREIGN KEY (id_nhanvien) REFERENCES nhanvien(id) -- Khóa ngoại tham chiếu đến bảng nhan_vien
+);
+
+-- Bảng nghỉ phép (nghiphep)
+CREATE TABLE nghiphep(
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Mã yêu cầu nghỉ phép
+    id_nhanvien INT, -- Mã nhân viên (Khóa ngoại tham chiếu đến bảng nhan_vien)
+    ngaynghi DATE, -- Ngày nghỉ
+    lydo TEXT, -- Lý do nghỉ phép
+    trangthai ENUM('approved', 'pending', 'rejected') DEFAULT 'pending', -- Trạng thái yêu cầu nghỉ phép
+    FOREIGN KEY (id_nhanvien) REFERENCES nhanvien(id) -- Khóa ngoại tham chiếu đến bảng nhan_vien
+);
+
+-- Bảng người dùng (users)
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- Mã người dùng
+    email VARCHAR(100) NOT NULL UNIQUE,  -- Email người dùng (dùng để đăng nhập)
+    password VARCHAR(255) NOT NULL,  -- Mật khẩu người dùng
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Thời gian tạo tài khoản
+);
+
+-- Bảng người dùng admin (admin_users)
+CREATE TABLE admin_users (
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- Mã admin
+    email VARCHAR(100) NOT NULL UNIQUE,  -- Email admin
+    password VARCHAR(255) NOT NULL,  -- Mật khẩu admin
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Thời gian tạo tài khoản
+);
+
+-- Bảng quyền (quyen)
+CREATE TABLE roles (
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Mã quyền
+    name VARCHAR(50) NOT NULL -- Tên quyền (Ví dụ: 'user', 'admin')
+);
+
+-- Bảng liên kết giữa người dùng và quyền (nguoi_dung_quyen)
+CREATE TABLE role_user (
+    user_id INT, -- Mã người dùng (Khóa ngoại tham chiếu đến bảng nguoi_dung)
+    role_id INT, -- Mã quyền (Khóa ngoại tham chiếu đến bảng quyen)
+    FOREIGN KEY (user_id) REFERENCES users(id), -- Khóa ngoại tham chiếu đến bảng nguoi_dung
+    FOREIGN KEY (role_id) REFERENCES roles(id) -- Khóa ngoại tham chiếu đến bảng quyen
+);
+
+-- Bảng liên kết admin và quyền (role_admin)
+CREATE TABLE role_admin (
+    admin_id INT,  -- Mã admin (Khóa ngoại tham chiếu đến bảng admin_users)
+    role_id INT,  -- Mã vai trò (Khóa ngoại tham chiếu đến bảng roles)
+    FOREIGN KEY (admin_id) REFERENCES admin_users(id),  -- Khóa ngoại tham chiếu đến bảng admin_users
+    FOREIGN KEY (role_id) REFERENCES roles(id)   -- Khóa ngoại tham chiếu đến bảng roles
+);
+
+-- Bảng liên kết giữa người dùng và nhân viên (nguoi_dung_nhan_vien)
+CREATE TABLE nhanvien_user (
+    user_id INT, -- Mã người dùng (Khóa ngoại tham chiếu đến bảng nguoi_dung)
+    id_nhanvien INT, -- Mã nhân viên (Khóa ngoại tham chiếu đến bảng nhan_vien)
+    FOREIGN KEY (user_id) REFERENCES users(id), -- Khóa ngoại tham chiếu đến bảng nguoi_dung
+    FOREIGN KEY (id_nhanvien) REFERENCES nhanvien(id) -- Khóa ngoại tham chiếu đến bảng nhan_vien
+);
+
+INSERT INTO nhanvien (ten, ngaysinh, phongban, chucvu, ngaybatdau)
+VALUES
+    ('Nguyễn Văn A', '1990-05-12', 'Kế toán', 'Nhân viên', '2020-01-01'),
+    ('Trần Thị B', '1985-09-30', 'IT', 'Trưởng phòng', '2018-03-15'),
+    ('Lê Văn C', '1992-07-20', 'Nhân sự', 'Nhân viên', '2021-06-01'),
+    ('Phan Thị D', '1987-11-05', 'Kinh doanh', 'Nhân viên', '2019-02-20');
+
+INSERT INTO chamcong (id_nhanvien, ngay, giovao, giora)
+VALUES
+    (1, '2024-12-01', '08:00:00', '17:00:00'),
+    (1, '2024-12-02', '08:15:00', '17:05:00'),
+    (2, '2024-12-01', '08:00:00', '17:00:00'),
+    (3, '2024-12-01', '09:00:00', '18:00:00'),
+    (4, '2024-12-01', '08:30:00', '17:30:00');
+
+INSERT INTO nghiphep (id_nhanvien, ngaynghi, lydo, trangthai)
+VALUES
+    (1, '2024-12-05', 'Đi khám bệnh', 'approved'),
+    (2, '2024-12-10', 'Công tác ngoài thành phố', 'pending'),
+    (3, '2024-12-12', 'Nghỉ lễ', 'approved'),
+    (4, '2024-12-14', 'Đám cưới người thân', 'rejected');
+
+INSERT INTO users (email, password)
+VALUES
+    ('nguyenvana@example.com', 'password123'),
+    ('tranthib@example.com', 'securepass456'),
+    ('levanc@example.com', 'mypassword789'),
+    ('phanthid@example.com', 'strongpassword321');
+
+INSERT INTO admin_users (email, password)
+VALUES
+    ('admin@example.com', 'adminpassword123'),
+    ('superadmin@example.com', 'supersecurepass456');
+
+INSERT INTO roles (name)
+VALUES
+    ('user'),
+    ('admin');
+
+INSERT INTO role_user (user_id, role_id)
+VALUES
+    (1, 1),  -- user_id = 1, role_id = user
+    (2, 1),  -- user_id = 2, role_id = user
+    (3, 1),  -- user_id = 3, role_id = user
+    (4, 1);  -- user_id = 4, role_id = user
+
+INSERT INTO role_admin (admin_id, role_id)
+VALUES
+    (1, 2),  -- admin_id = 1, role_id = admin
+    (2, 2);  -- admin_id = 2, role_id = admin
+
+INSERT INTO nhanvien_user (user_id, id_nhanvien)
+VALUES
+    (1, 1),  -- user_id = 1, id_nhanvien = 1
+    (2, 2),  -- user_id = 2, id_nhanvien = 2
+    (3, 3),  -- user_id = 3, id_nhanvien = 3
+    (4, 4);  -- user_id = 4, id_nhanvien = 4

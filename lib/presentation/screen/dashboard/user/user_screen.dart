@@ -94,7 +94,9 @@ class UserScreen extends StatelessWidget {
                                         actions: [
                                           OutlinedButtonApp(
                                               onPressed: () {
-                                                Navigator.pop(NavigationApp.navigatorKey.currentContext!);
+                                                Navigator.pop(NavigationApp
+                                                    .navigatorKey
+                                                    .currentContext!);
                                               },
                                               child: Text('Huỷ'.toUpperCase(),
                                                   style: TextStylesApp.medium(
@@ -108,7 +110,9 @@ class UserScreen extends StatelessWidget {
                                                     .read<UserCubit>()
                                                     .createUser();
                                                 if (result)
-                                                Navigator.pop(NavigationApp.navigatorKey.currentContext!);
+                                                  Navigator.pop(NavigationApp
+                                                      .navigatorKey
+                                                      .currentContext!);
                                               }
                                             },
                                             child: Text(

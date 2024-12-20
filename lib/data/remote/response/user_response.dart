@@ -22,7 +22,8 @@ class CreateUserResponse extends BaseResponse {
   final String? data;
   factory CreateUserResponse.fromJson(Map<String, dynamic> json) {
     return CreateUserResponse(
-      data: json['data']['id'] as String?,
+      // data: json['data']['id'] as String?,
+      data: '',
       success: json['success'] as bool,
       message: json['message'] as String,
     );
@@ -30,7 +31,7 @@ class CreateUserResponse extends BaseResponse {
 }
 
 class UserData {
-  final String? id;
+  final int? id;
   final String? ngaybatdau;
   final String? phongban;
   final String? chucvu;
@@ -47,7 +48,7 @@ class UserData {
   });
 
   factory UserData.fromJson(Map<String, dynamic> json) => UserData(
-        id: json['id'] as String?,
+        id: json['id'] as int?,
         ngaybatdau: json['ngaybatdau'] as String?,
         phongban: json['phongban'] as String?,
         chucvu: json['chucvu'] as String?,
@@ -65,7 +66,7 @@ class UserData {
       };
 
   UserModel toUserModel() => UserModel(
-        id: id,
+        id: id.toString(),
         name: ten,
         department: phongban,
         role: chucvu,
