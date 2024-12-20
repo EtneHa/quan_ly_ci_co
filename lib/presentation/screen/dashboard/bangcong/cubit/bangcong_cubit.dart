@@ -3,6 +3,7 @@ import 'package:quan_ly_ci_co/core/apps/enums/base_screen_state.dart';
 import 'package:quan_ly_ci_co/core/utils/toast.dart';
 import 'package:quan_ly_ci_co/data/remote/cham_cong_repository.dart';
 import 'package:quan_ly_ci_co/data/remote/request/cham_cong_input.dart';
+import 'package:quan_ly_ci_co/data/remote/request/pagination_params.dart';
 import 'package:quan_ly_ci_co/domain/models/bangcong_model.dart';
 import 'bangcong_state.dart';
 
@@ -15,10 +16,17 @@ class BangCongCubit extends Cubit<BangCongState> {
   void loadData() async {
     emit(state.copyWith(screenState: BaseScreenState.loading));
     try {
-      await Future.delayed(const Duration(seconds: 1));
+      // await Future.delayed(const Duration(seconds: 1));
+      final res = await _repo.getAll(PaginationParams(page: 1, limit: 10));
+      if (res?.success == false) {
+        emit(state.copyWith(
+            screenState: BaseScreenState.error, errorText: res?.message));
+        return;
+      }
       emit(state.copyWith(
-          screenState: BaseScreenState.success,
-          chamgCongData: generateTestData()));
+        screenState: BaseScreenState.success,
+        chamgCongData: res?.data.map((e) => e.toBangCongModel()).toList() ?? [],
+      ));
     } catch (e) {
       emit(state.copyWith(
           screenState: BaseScreenState.loading, errorText: e.toString()));

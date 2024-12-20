@@ -10,12 +10,12 @@ import 'package:quan_ly_ci_co/data/remote/rest_api.dart';
 class ChamCongRepository {
   final RestApi _restApi = RestApi();
 
-  Future<ListUserResponse?> getAll(PaginationParams pagination) async {
+  Future<ListChamCongResponse?> getAll(PaginationParams pagination) async {
     try {
       final response = await _restApi.get('/api/employee/getall',
           queryParameters: pagination.toJson());
       if (response.statusCode == 200) {
-        return ListUserResponse.fromJson(response.data);
+        return ListChamCongResponse.fromJson(response.data);
       } else {
         ToastApp.showError(response.data.message ?? response.statusMessage);
         return null;
