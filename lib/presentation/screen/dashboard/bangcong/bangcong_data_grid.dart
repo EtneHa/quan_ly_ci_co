@@ -60,6 +60,7 @@ class BangCongDataGrid extends StatelessWidget {
                   gridLinesVisibility: GridLinesVisibility.none,
                   columnWidthMode: ColumnWidthMode.fitByCellValue,
                   // defaultColumnWidth: cs.maxWidth / columnTitles.length,
+                  frozenColumnsCount: 3,
                   isScrollbarAlwaysShown: false,
                   onQueryRowHeight: (RowHeightDetails details) {
                     return 70.0;
