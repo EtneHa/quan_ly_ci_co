@@ -80,9 +80,9 @@ class ChamCong {
 
   factory ChamCong.fromJson(Map<String, dynamic> json) {
     return ChamCong(
-      ngay: json['ngay'] as String,
-      giovao: json['giovao'] as String,
-      giora: json['giora'] as String,
+      ngay: json['ngay'] as String?,
+      giovao: json['giovao'] as String?,
+      giora: json['giora'] as String?,
     );
   }
 
